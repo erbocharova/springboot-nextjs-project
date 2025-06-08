@@ -1,0 +1,80 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/frontend/node_modules
+/frontend/.pnp
+/frontend/.pnp.*
+/frontend/.yarn/*
+!/frontend/.yarn/patches
+!/frontend/.yarn/plugins
+!/frontend/.yarn/releases
+!/frontend/.yarn/versions
+
+# testing
+/frontend/coverage
+
+# next.js
+/frontend/.next/
+/frontend/out/
+
+# production
+/frontend/build
+
+# misc
+/frontend/.DS_Store
+/frontend/*.pem
+
+# debug
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+/frontend/.env*
+
+# vercel
+/frontend/.vercel
+
+# typescript
+/frontend/*.tsbuildinfo
+/frontend/next-env.d.ts
+
+
+/frontend/npm-debug.log
+/frontend/.next
+
+#backend-service
+/backend-service/HELP.md
+/backend-service/target/
+/backend-service/.mvn/wrapper/maven-wrapper.jar
+!/backend-service/**/src/main/**/target/
+!/backend-service/**/src/test/**/target/
+
+### STS ###
+/backend-service/.apt_generated
+/backend-service/.classpath
+/backend-service/.factorypath
+/backend-service/.project
+/backend-service/.settings
+/backend-service/.springBeans
+/backend-service/.sts4-cache
+
+### IntelliJ IDEA ###
+/backend-service/.idea
+/backend-service/*.iws
+/backend-service/*.iml
+/backend-service/*.ipr
+
+### NetBeans ###
+/backend-service/nbproject/private/
+/backend-service/nbbuild/
+/backend-service/dist/
+/backend-service/nbdist/
+/backend-service/.nb-gradle/
+/backend-service/build/
+!/backend-service/**/src/main/**/build/
+!/backend-service/**/src/test/**/build/
+
+### VS Code ###
+/backend-service/.vscode/

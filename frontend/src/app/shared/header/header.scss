@@ -1,0 +1,200 @@
+@import "../../styles/vars";
+
+.header {
+  background-color: #000; // черный фон
+  color: $white-color;
+
+  .header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+
+    @media screen and (max-width: $mobile-s) {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 5px 10px 0 10px;
+      gap: 5px;
+    }
+
+    @media screen and (max-width: $desktop) {
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 10px 0 10px;
+      gap: 10px;
+    }
+  }
+
+  .header-left {
+    flex: 0 0 auto;
+
+    @media screen and (max-width: $mobile-s) {
+      margin-bottom: 5px;
+    }
+
+    @media screen and (max-width: $desktop) {
+      margin-bottom: 0;
+    }
+  }
+
+  .header-center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+
+    @media screen and (max-width: $mobile-s) {
+      margin-bottom: 5px;
+      flex: 1 1 auto;
+    }
+
+    @media screen and (max-width: $desktop) {
+      margin-bottom: 0;
+      flex: 1 1 auto;
+    }
+
+    .header-search-form {
+      flex: 1 1 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .header-search-input {
+      flex: 1 1 auto;
+      padding: 8px 12px;
+      font-size: $font-size-medium;
+      border-radius: 4px;
+      border: none;
+      outline: none;
+      width: 100%;
+    }
+
+    .header-search-button {
+      padding: 8px 16px;
+      font-size: $font-size-medium;
+      background-color: $yellow-color;
+      color: $black-color;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: darken($yellow-color, 10%);
+      }
+    }
+  }
+
+  .header-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    @media screen and (max-width: $mobile-s) {
+      margin-top: 0;
+      width: 100%;
+      justify-content: space-between;
+      gap: 5px;
+    }
+
+    @media screen and (max-width: $desktop) {
+      margin-top: 0;
+      width: auto;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+    color: $white-color;
+
+    img {
+      display: block;
+      width: 24px;
+      height: 24px;
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .custom-button.icon-button {
+    color: $white-color;
+
+    img {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .custom-button.icon-button.cart-button {
+    color: $white-color;
+
+    img {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+    .cart-button {
+      position: relative;
+
+      .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 12px;
+        line-height: 1;
+      }
+    }
+  }
+
+  .header-nav-categories {
+    background-color: #111;
+    padding: 5px 20px;
+
+    @media screen and (max-width: $desktop) {
+      padding: 5px 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    ul {
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      flex-wrap: wrap;
+
+      @media screen and (max-width: $desktop) {
+        flex-wrap: nowrap;
+      }
+    }
+
+    li {
+      font-size: $font-size-small;
+      font-weight: $font-weight-semibold;
+
+      a {
+        color: $white-color;
+        text-decoration: none;
+        padding: 5px 8px;
+        display: block;
+
+        &:hover {
+          color: $yellow-color;
+        }
+      }
+    }
+  }
+}

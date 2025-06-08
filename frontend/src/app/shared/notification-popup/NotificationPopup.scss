@@ -1,0 +1,71 @@
+@import "../../styles/vars.scss";
+
+.notification-popup {
+  position: absolute;
+  top: 48px; /* Adjusted for better alignment */
+  width: 240px;
+  background: $white-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px $box-shadow-color;
+  z-index: 1000;
+  font-family: "Arial", sans-serif;
+  color: $black-color;
+  cursor: default;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+.notification-popup--left {
+  left: 0;
+}
+
+.notification-popup--right {
+  right: 0;
+}
+
+.notification-popup__arrow {
+  position: absolute;
+  top: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid $white-color;
+  filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
+}
+
+.notification-popup__arrow--left {
+  left: 16px;
+}
+
+.notification-popup__arrow--right {
+  right: 16px;
+}
+
+.notification-popup__content {
+  font-size: $font-size-medium;
+  text-align: center;
+  user-select: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.notification-popup__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: $gray-color;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  user-select: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $black-color;
+  }
+}

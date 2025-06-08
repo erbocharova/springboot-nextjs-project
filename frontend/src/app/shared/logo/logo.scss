@@ -1,0 +1,14 @@
+.logo-sultan-link {
+  display: inline-block;
+}
+
+.logo-sultan {
+  transition: transform 0.3s, filter 0.3s;
+  width: 78px; /* уменьшенный размер в 2 раза */
+  height: auto;
+}
+
+.logo-sultan-link:hover .logo-sultan {
+  transform: scale(1.1);
+  filter: brightness(0.8);
+}

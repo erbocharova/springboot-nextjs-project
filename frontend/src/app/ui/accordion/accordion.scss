@@ -1,0 +1,35 @@
+@import "@/app/styles/vars";
+
+.accordion-block {
+  font-size: $font-size-medium;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  .expanding-info-button {
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    font-size: $font-size-xlarge;
+    letter-spacing: normal;
+    font-weight: 500;
+    color: $white-color;
+    background-color: transparent;
+    box-shadow: none;
+
+    &:active {
+      box-shadow: none;
+      transform: scale(0.99);
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease-in-out;
+      transform: rotate(45deg);
+    }
+
+    &.active img {
+      transform: rotate(90deg);
+    }
+  }
+}

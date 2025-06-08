@@ -1,0 +1,99 @@
+@import "@/app/styles/vars";
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: $black-color;
+    color: $white-color;
+
+    @media screen and (max-device-width: $mobile-max) {
+        padding: 8px;
+    }
+    
+    &__links {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        width: 100%;
+        padding: 40px;
+        gap: 120px;
+
+        @media screen and (max-device-width: $mobile-max) {
+            flex-direction: column;
+            justify-content: start;
+            padding: 0;
+            gap: 8px;
+        }
+
+        &__categories {
+
+            @media screen and (max-device-width: $mobile-max) {
+                width: 100%;
+                border-top: 1px solid $gray-color;
+            }
+
+            &__title {
+                font-size: $font-size-xlarge;
+            }
+
+            &__list {
+
+                li {
+
+                    a {
+                        font-size: $font-size-large;
+                        color: $gray-color;
+                    }
+
+                    a:hover {
+                        color: $color-indigo-400;
+                    }
+
+                    a:active {
+                        color: $color-indigo-600;
+                    }
+                }
+            }
+        }
+
+        &__help {
+
+            @media screen and (max-device-width: $mobile-max) {
+                width: 100%;
+                border-top: 1px solid $gray-color;
+                border-bottom: 1px solid $gray-color;
+            }
+
+            &__title {
+                font-size: $font-size-xlarge;
+            }
+
+            &__list {
+
+                li {
+
+                    a {
+                        font-size: $font-size-large;
+                        color: $gray-color;
+                    }
+
+                    a:hover {
+                        color: $color-indigo-400;
+                    }
+
+                    a:active {
+                        color: $color-indigo-600;
+                    }
+                }
+            }
+        }
+    }
+
+    &__info {
+        padding: 8px;
+        color: $gray-color;
+    }
+}

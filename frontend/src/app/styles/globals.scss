@@ -1,0 +1,29 @@
+@import "./vars";
+@import "react-toastify/dist/ReactToastify.css";
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+
+  h2 {
+    margin: 16px 0;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: $yellow-color;
+
+    @media screen and (max-device-width: $mobile-max) {
+      font-size: $font-size-xlarge;
+    }
+
+    span {
+      font-weight: 500;
+      color: $black-color;
+
+      @media screen and (max-device-width: $mobile-max) {
+        font-size: $font-size-xlarge;
+      }
+    }
+  }
+}

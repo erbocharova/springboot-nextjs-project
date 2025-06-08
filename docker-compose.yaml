@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  nextjs:
+    build: 
+      context: .\frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - book-on-hook
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/next-library
+
+  kotlin:
+    build: 
+      context: .\backend-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/next-library
+    networks:
+      - book-on-hook
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - book-on-hook
+volumes:
+  mongo-data:
+
+networks:
+  book-on-hook:
+    driver: bridge
+
