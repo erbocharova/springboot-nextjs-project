@@ -17,7 +17,7 @@ async function handleSubmit(e: React.FormEvent) {
     try {
       //вызов функции из api/api.ts для регистрации пользователя
       const res = await signupUser({ username, password, firstName, lastName, birthDate });
-      Cookies.set('token', res.data.token, { expires: 7 });
+      Cookies.set('token', res.data.token, { expires: 1 });
       window.location.href = '/my-profile';
     } catch (err) {
       alert('Ошибка при регистрации.');

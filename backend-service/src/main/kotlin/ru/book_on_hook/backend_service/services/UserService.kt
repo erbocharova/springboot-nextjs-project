@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.book_on_hook.backend_service.dao.User
 import ru.book_on_hook.backend_service.dto.UserDto
 import ru.book_on_hook.backend_service.repository.UserRepository
+import ru.book_on_hook.backend_service.security.CustomUserDetails
 
 //Сервис пользователей, реализующий методы взаимводействия с базой
 @Service
@@ -39,12 +40,16 @@ class UserService(
             role = User.Role.ADMIN))
     }
 
-     fun mapUserToDto(user: User): UserDto {
+     fun mapUserToDto(user: CustomUserDetails): UserDto {
         return UserDto(
             username = user.username,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            birthDate = user.birthDate
+            firstName = user.getFirstName(),
+            lastName = user.getLastName(),
+            birthDate = user.getBirthDate()
         )
+    }
+
+    fun validatePassword(password: String, hashedPassword: String): Boolean {
+        return encoder.matches(password, hashedPassword)
     }
 }

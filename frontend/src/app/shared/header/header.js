@@ -65,7 +65,6 @@ const Header = () => {
             />
             <NotificationPopup visible={isNotificationOpen} onClose={closeNotification} />
           </div>
-          { isLoggedIn ?
             <Link href="/my-profile" passHref>
               <Button
                 className="icon-button"
@@ -73,13 +72,6 @@ const Header = () => {
                 title="Мой Лабиринт"
               />
           </Link>
-          : <Link href="/auth/signup" passHref>
-              <Button
-                className="icon-button"
-                icon="/icons/profile.svg"
-                title="Мой Лабиринт"
-              />
-          </Link>}
           <Link href="/cart" passHref>
               <Button
                 className="icon-button cart-button"
