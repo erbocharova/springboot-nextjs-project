@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 import java.security.Key
@@ -16,11 +15,10 @@ import javax.crypto.spec.SecretKeySpec
 class JwtUtil(
 
     @Value("\${jwt.secret}") private val secret: String,
-    @Value("\${jwt.expiration}") private val expirationTimeMs: Long,
-    private val encoder: PasswordEncoder
+    @Value("\${jwt.expiration}") private val expirationTimeMs: Long
 ) {
 
-    fun getUsernameFromToken(token: String): String {
+    fun extractUsernameFromToken(token: String): String {
         val claims: Claims = parseClaimsFromToken(token)
         return claims.subject
     }
@@ -49,7 +47,15 @@ class JwtUtil(
             .compact()
     }
 
-    fun validatePassword(password: String, hashedPassword: String): Boolean {
-        return encoder.matches(password, hashedPassword)
+    fun validateToken(token: String): Boolean {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+            return true
+        } catch (ex: Exception) {
+            return false
+        }
     }
 }

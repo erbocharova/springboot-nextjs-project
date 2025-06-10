@@ -2,7 +2,8 @@
 import Cookies from 'js-cookie';
 import { useAuthStatus } from '@/app/hooks/useAuthStatus';
 import { useState, useEffect } from 'react';
-import { getProfile } from '@/app/api/api';
+import { getProfile, logout } from '@/app/api/api';
+import Button from '@/app/ui/button/button';
 
 export default function ProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
@@ -22,7 +23,7 @@ export default function ProfilePage() {
       getProfile(token)
         .then((res) => setUserInfo(res.data))
         .catch((err) => {
-          alert('Ошибка при получении профиля.');
+          window.location.href = '/auth/signin';
         });
     }
     else {
@@ -38,6 +39,8 @@ export default function ProfilePage() {
       ) : (
         <span>Загрузка...</span>
       )}
+
+      <button onClick={() => logout()}>Выйти</button>
     </div>
   );
 }

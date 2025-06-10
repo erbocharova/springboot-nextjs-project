@@ -3,6 +3,7 @@
 // в строке  @GetMapping("/адрес") в контроллере ShopController.kt
 
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -22,5 +23,19 @@ export async function getProfile(data: string) {
 
 export async function getUsers() {
   return axios.get(`${API_URL}/users`)
-  
+}
+
+export async function logout() {
+  try {
+    await axios.post(`${API_URL}/auth/logout`, {}, {
+      withCredentials: true // Передача cookies
+    });
+
+    alert('Вы успешно вышли из системы.');
+
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Ошибка выхода из системы:', error.response ? error.response.data : error.message);
+    alert('Возникла ошибка при выходе из системы.');
+  }
 }
