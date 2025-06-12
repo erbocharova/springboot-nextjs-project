@@ -11,6 +11,8 @@ class CustomUserDetails(
     private val firstName: String,
     private val lastName: String,
     private val birthDate: String,
+    private val telNumber: String,
+    private val mail: String,
     private val authorities: Collection<GrantedAuthority>,
     private val enabled: Boolean = true
 ) : UserDetails {
@@ -21,6 +23,8 @@ class CustomUserDetails(
         firstName = user.firstName,
         lastName = user.lastName,
         birthDate = user.birthDate,
+        telNumber = user.telNumber,
+        mail = user.mail,
         authorities = listOf(SimpleGrantedAuthority(user.role.name)),
         enabled = true
     )
@@ -36,4 +40,11 @@ class CustomUserDetails(
     fun getFirstName(): String = firstName
     fun getLastName(): String = lastName
     fun getBirthDate(): String = birthDate
+    fun getTelNumber(): String = telNumber
+    fun getMail(): String = mail
+
+    fun getRole(): User.Role {
+        val authority = authorities.single() as SimpleGrantedAuthority
+        return User.Role.valueOf(authority.authority)
+    }
 }
