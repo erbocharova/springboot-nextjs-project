@@ -1,9 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import Button from "../ui/button/button";
-import CountryCodeSelect, { countryCodeMap } from "./CountryCodeSelect";
 import DynamicForm from "../DynamicForm";
-import { Order } from "../domain/Order";
 import PaymentOptionButton from "./PaymentOptionButton";
 import "./checkout.scss";
 
@@ -46,11 +44,40 @@ const CheckoutPage = () => {
     };
   }, []);
 
-  const onSubmit = (data) => {
+  const [formData, setFormData] = React.useState(null);
+  const [isFormValid, setIsFormValid] = React.useState(false);
+
+  const onSubmit = async (data) => {
+    setFormData(data);
+    setFormResult(null); // сброс результата при новом сабмите
+  };
+
+  const onValidChange = (valid) => {
+    setIsFormValid(valid);
+  };
+
+  const handleSbpPayment = async () => {
+    if (!isFormValid) {
+      alert("Пожалуйста, заполните все обязательные поля корректно.");
+      return;
+    }
+    if (formResult?.paymentMethod && formResult.paymentMethod !== "sbp") {
+      alert("Пожалуйста, выберите способ оплаты через СБП.");
+      return;
+    }
+    const orderPayload = { ...formData, paymentMethod: "sbp" };
     try {
-      const order = new Order(data.email, data.amount);
-      setFormResult({ success: true, message: "Заказ успешно создан", order });
+      const response = await fetch(process.env.NEXT_PUBLIC_ORDER_URL || "http://localhost:8080/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
+      });
+      if (!response.ok) throw new Error("Ошибка при создании заказа");
+      const result = await response.json();
+      console.log("Результат оплаты через СБП:", result);
+      setFormResult({ success: true, message: "Заказ успешно создан", order: result });
     } catch (error) {
+      console.error("Ошибка при оплате через СБП:", error);
       setFormResult({ success: false, message: error.message });
     }
   };
@@ -59,7 +86,7 @@ const CheckoutPage = () => {
     <main className="checkout">
       <section className="checkout__form">
         <div className="checkout__notice">
-          Уже регистрировались в Лабиринте? <a href="#">Войдите в систему</a>, чтобы получить доступ к своим сохранённым данным. Товары в корзине и отложенные товары добавятся в ваш профиль.
+          Уже регистрировались в Book on hook? <a href="#">Войдите в систему</a>, чтобы получить доступ к своим сохранённым данным. Товары в корзине и отложенные товары добавятся в ваш профиль.
         </div>
 
         <h1 className="checkout__title">Оформление заказа</h1>
@@ -75,7 +102,7 @@ const CheckoutPage = () => {
 
         <div className="section section--recipient">
           <h2 className="section__header">Получатель</h2>
-          <DynamicForm formType={formType} onSubmit={onSubmit} />
+          <DynamicForm formType={formType} onSubmit={onSubmit} onValidChange={onValidChange} />
           {formResult && (
             <div className={formResult.success ? "success-message" : "error-message"}>
               {formResult.message}
@@ -127,7 +154,8 @@ const CheckoutPage = () => {
         <Button
           text="Оплатить через СБП"
           className="btn btn--primary btn--full"
-          onClick={() => alert("Оплата через СБП")}
+          onClick={handleSbpPayment}
+          disabled={!isFormValid || formResult?.paymentMethod !== "sbp"}
         />
         <label className="summary__confirm">
           <input
