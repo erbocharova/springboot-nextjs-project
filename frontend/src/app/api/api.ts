@@ -11,7 +11,7 @@ export async function loginUser(data: { username: string, password: string }) {
   return axios.post(`${API_URL}/auth/signin`, data);
 }
 
-export async function signupUser(data: { username: string, password: string, firstName: string, lastName: string, birthDate: string }) {
+export async function signupUser(data: { username: string, password: string, firstName: string, lastName: string, birthDate: string, telNumber: string, mail: string }) {
   return axios.post(`${API_URL}/auth/signup`, data);
 }
 
