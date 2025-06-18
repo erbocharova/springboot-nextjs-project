@@ -78,3 +78,4 @@
 
 ### VS Code ###
 /backend-service/.vscode/
+backend-service/src/main/resources/application.properties
