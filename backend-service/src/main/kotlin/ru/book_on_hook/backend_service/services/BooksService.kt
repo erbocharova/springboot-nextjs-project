@@ -64,7 +64,7 @@ class BooksService(
     }
 
     fun updateBookById(id: String, request: UpdateBookRequest): BookDto {
-        val existingBook = bookRepository.findById(id).orElseThrow { NoSuchElementException("Книга с данным ID не найдена") }
+        val existingBook = bookRepository.findById(id).orElseThrow { NoSuchElementException("Книга с ID $id не найдена") }
         applyUpdates(existingBook, request)
         val savedBook = bookRepository.save(existingBook)
         return mapBookToDto(savedBook)

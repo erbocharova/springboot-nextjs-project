@@ -29,7 +29,7 @@ data class SignupRequest(
     val birthDate: String,
 
     @field:NotBlank(message = "Необходимо указать номер телефона")
-    @Schema(description = "Номер телефона пользователя", required = true, example = "79611616161")
+    @Schema(description = "Номер телефона пользователя", pattern = "^\\+?[1-9]\\d{1,14}$", required = true, example = "+79611616161")
     val telNumber: String,
 
     @field:NotBlank(message = "Необходимо указать эл. почту")
