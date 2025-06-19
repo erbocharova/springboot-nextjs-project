@@ -29,6 +29,19 @@ class UserService(
         return result
     }
 
+    fun createAdmin(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String, telNumber: String, mail: String): User {
+        val encodedPassword = encoder.encode(rawPassword)
+        return userRepository.save(User(
+            username = username,
+            passwordHash = encodedPassword,
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate,
+            telNumber = telNumber,
+            mail = mail,
+            role = User.Role.ADMIN))
+    }
+
     fun createUser(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String, telNumber: String, mail: String): User {
         val encodedPassword = encoder.encode(rawPassword)
         return userRepository.save(User(
