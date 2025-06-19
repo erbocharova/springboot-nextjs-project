@@ -12,7 +12,7 @@ data class BookOrder(
     val username: String,
     val firstName: String,
     val lastName: String,
-    val email: String,
+    val mail: String,
     val telNumber: String,
     val address: String,
     val books: List<BookInOrderDto>,

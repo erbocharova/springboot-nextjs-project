@@ -61,15 +61,24 @@ class SecurityConfig (
             .authorizeHttpRequests { authorize ->
                 authorize
 
-                    .requestMatchers("/swagger-ui/index.html").permitAll()
-                    // Все маршруты `/api/auth/**` доступны всем
-                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers(
+                        "/swagger-ui/index.html").permitAll()
 
-                    // Все маршруты `/api/y-profile/**` требуют авторизации
-                    .requestMatchers("/api/my-profile/**", "/api/my-profile").authenticated()
+                    .requestMatchers(
+                        "/api/auth/signin",
+                        "/api/auth/signup").permitAll()
 
-                    // Все маршруты `/api/admin/**` требуют роль ADMIN
-                    .requestMatchers("/api/admin/**", "/api/books/admin/**").hasRole("ADMIN")
+                    .requestMatchers(
+                        "/api/auth/logout",
+                        "/api/my-profile/**",
+                        "/api/my-profile",
+                        "/api/orders/**").authenticated()
+
+                    .requestMatchers(
+                        "/api/admin/**",
+                        "/api/books/admin/**",
+                        "/api/users/admin/**",
+                        "/api/orders/admin/**").hasRole("ADMIN")
 
                     .anyRequest().permitAll()
             }
