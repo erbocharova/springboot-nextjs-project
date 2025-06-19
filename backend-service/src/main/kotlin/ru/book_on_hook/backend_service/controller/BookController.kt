@@ -1,11 +1,16 @@
 package ru.book_on_hook.backend_service.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -33,7 +38,15 @@ class BookController(
     )
     @ApiResponse(
         responseCode = "200",
-        description = "Список книг возвращён успешно."
+        description = "Список книг возвращён успешно.",
+        content = [Content(
+            mediaType = "application/json",
+            array = (
+                    ArraySchema(
+                        schema = Schema(
+                            implementation = BookDto::class
+                        )
+                    )))]
     )
     @GetMapping("/all")
     fun getAllBooks(): MutableList<BookDto> {
@@ -48,17 +61,28 @@ class BookController(
     )
     @ApiResponse(
         responseCode = "200",
-        description = "Книга возвращена успешно."
+        description = "Книга возвращена успешно.",
+        content = [Content(
+            mediaType = "application/json",
+            schema = Schema(
+                type = "object",
+                implementation = BookDto::class
+            ))]
     )
     @ApiResponse(
         responseCode = "404",
-        description = "Книга не найдена."
+        description = "Книга не найдена.",
+        content = [Content(
+            mediaType = "text/plain",
+            schema = Schema(type = "string"),
+            examples = [ExampleObject(value = "Книга с ID b001 не найдена")]
+        )]
     )
     @GetMapping("/{id}")
     fun getBookById(@PathVariable id: String): ResponseEntity<*> {
         val book = booksService.getBookById(id)
         if (book == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Книга не найдена.")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.TEXT_PLAIN).body("Книга с ID $id не найдена.")
         }
         return ResponseEntity.ok(book)
     }
@@ -70,30 +94,85 @@ class BookController(
     )
     @ApiResponse(
         responseCode = "201",
-        description = "Новая книга создана успешно."
+        description = "Новая книга создана успешно.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"message": "Книга с ID b001 успешно добавлена"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Ошибка валидации.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Невалидные данные книги"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "Доступ запрещен",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Недостаточно прав"}
+                    """)]
+        )]
     )
     @ApiResponse(
         responseCode = "409",
-        description = "Книгу невозможно создать, так как такая книга уже существует."
+        description = "Книгу невозможно создать, так как такая книга уже существует.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Книга с ID b001 уже существует."}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Внутренняя ошибка",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Внутренняя ошибка сервера"}
+                    """)]
+        )]
     )
     @PostMapping("/admin/add")
     fun createBook(@Valid @RequestBody request: CreateBookRequest): ResponseEntity<*> {
         if (booksService.existsById(request.id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Книга с id ${request.id} уже существует.")
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(mapOf("error" to "Книга с ID ${request.id} уже существует"))
         }
-        booksService.createBook(
-            request.id,
-            request.name,
-            request.author,
-            request.description,
-            request.imageUrl,
-            request.price,
-            request.quantity,
-            request.available,
-            request.popular,
-            request.category
-        )
-        return ResponseEntity.status(HttpStatus.CREATED).body("Книга успешно добавлена.")
+        try {
+            booksService.createBook(
+                request.id,
+                request.name,
+                request.author,
+                request.description,
+                request.imageUrl,
+                request.price,
+                request.quantity,
+                request.available,
+                request.popular,
+                request.category
+            )
+            return ResponseEntity.status(HttpStatus.CREATED)
+                .body(mapOf("message" to "Книга с ID ${request.id} успешно добавлена"))
+        } catch (ex: IllegalStateException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(mapOf("error" to (ex.message ?: "Невалидные данные книги")))
+        } catch (ex: AccessDeniedException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("error" to (ex.message ?: "Недостаточно прав")))
+        } catch (ex: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(mapOf("error" to "Внутренняя ошибка сервера"))
+        }
     }
 
 
@@ -103,22 +182,73 @@ class BookController(
     )
     @ApiResponse(
         responseCode = "200",
-        description = "Информация о книге успешно обновлена."
+        description = "Информация о книге успешно обновлена.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"message": "Книга с ID b001 успешно обновлена"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Невалидные данные запроса",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Невалидные данные для обновления"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "Доступ запрещен",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Недостаточно прав"}
+                    """)]
+        )]
     )
     @ApiResponse(
         responseCode = "404",
         description = "Книга с указанным ID не найдена.",
-        content = [Content()]
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Книга не найдена"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Ошибка при обновлении книги.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Произошла ошибка при обновлении книги"}
+                    """)]
+        )]
     )
     @PatchMapping("/admin/update/{id}")
-    fun updateBook(@PathVariable id: String, @RequestBody request: UpdateBookRequest): ResponseEntity<BookDto> {
+    fun updateBook(@PathVariable id: String, @RequestBody request: UpdateBookRequest): ResponseEntity<*> {
         try {
-            val updatedBook = booksService.updateBookById(id, request)
-            return ResponseEntity.ok(updatedBook)
-        } catch (ex: Exception) {
-            return ResponseEntity.badRequest().body(null)
+            booksService.updateBookById(id, request)
+            return ResponseEntity.ok(mapOf("message" to "Книга с ID $id успешно обновлена"))
+        } catch (ex: AccessDeniedException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("error" to (ex.message ?: "Недостаточно прав")))
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("error" to (e.message ?: "Книга не найдена")))
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(mapOf("error" to (e.message ?: "Невалидные данные для обновления")))
+        } catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("error" to (e.message ?: "Произошла ошибка при обновлении книги"))
         }
-    }
+        }
 
 
     @Operation(
@@ -126,20 +256,75 @@ class BookController(
         description = "Удаляет книгу из базы данных по указанному ID."
     )
     @ApiResponse(
-        responseCode = "204",
-        description = "Книга успешно удалена",
-        content = []
+        responseCode = "200",
+        description = "Информация о книге успешно удалена.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"message": "Книга с ID b001 успешно удалена"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Невалидные данные запроса",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Невалидные данные для удаления"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "Доступ запрещен",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Недостаточно прав"}
+                    """)]
+        )]
     )
     @ApiResponse(
         responseCode = "404",
-        description = "Книга с указанным идентификатором не найдена",
-        content = []
+        description = "Книга с указанным ID не найдена.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Книга не найдена"}
+                    """)]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Ошибка при удалении книги.",
+        content = [Content(
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Произошла ошибка при удалении книги"}
+                    """)]
+        )]
     )
     @DeleteMapping("/admin/delete/{id}")
-    fun deleteBook(@PathVariable id: String): ResponseEntity<Void> {
-        booksService.deleteBookById(id)
-        return ResponseEntity.noContent().build()
+    fun deleteBook(@PathVariable id: String): ResponseEntity<*> {
+        try {
+            booksService.deleteBookById(id)
+            return ResponseEntity.ok(mapOf("message" to "Книга с ID $id успешно удалена"))
+        } catch (ex: AccessDeniedException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("error" to (ex.message ?: "Недостаточно прав")))
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("error" to (e.message ?: "Книга не найдена")))
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(mapOf("error" to (e.message ?: "Невалидные данные для удаления")))
+        } catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("error" to (e.message ?: "Произошла ошибка при удалении книги"))
+        }
     }
+
 
     @Operation(
         summary = "Поиск книг по критериям",
@@ -147,15 +332,40 @@ class BookController(
     )
     @ApiResponse(
         responseCode = "200",
-        description = "Список книг, удовлетворяющих критериями поиска.",
+        description = "Список книг, удовлетворяющих критериями поиска. Если ничего не найдено - возвращается пустой список.",
+        content = [Content(
+            mediaType = "application/json",
+            array = ArraySchema(schema = Schema(implementation = BookDto::class)),
+            examples = [ExampleObject(value = "[]")]
+            )]
     )
     @ApiResponse(
         responseCode = "400",
         description = "Некорректный запрос.",
-        content = []
+        content = [Content(
+            mediaType = "text/plain",
+            schema = Schema(type = "string"),
+            examples = [ExampleObject(value = "Невалидные данные для поиска.")]
+        )]
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Внутренняя ошибка сервера",
+        content = [Content(
+            mediaType = "text/plain",
+            schema = Schema(type = "string"),
+            examples = [ExampleObject(value = "Произошла ошибка при поиске книг.")]
+        )]
     )
     @GetMapping("/search")
-    fun searchBooks(@RequestBody searchRequest: SearchBookRequest): List<BookDto> {
-        return booksService.searchBooks(searchRequest)
+    fun searchBooks(@RequestBody searchRequest: SearchBookRequest): ResponseEntity<*>  {
+        return try {
+            val books = booksService.searchBooks(searchRequest)
+            ResponseEntity.ok(books)
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("Невалидные данные для поиска.")
+        } catch (e: Exception) {
+            ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body("Произошла ошибка при поиске книг.")
+        }
     }
 }

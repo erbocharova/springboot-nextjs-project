@@ -33,7 +33,7 @@ data class UserDto(
     /**
      * Номер телефона пользователя.
      */
-    @field:Schema(description = "Телефон пользователя", readOnly = true, example = "79611616161")
+    @field:Schema(description = "Телефон пользователя", pattern = "^\\+?[1-9]\\d{1,14}$", readOnly = true, example = "+79611616161")
     val telNumber: String,
 
     /**

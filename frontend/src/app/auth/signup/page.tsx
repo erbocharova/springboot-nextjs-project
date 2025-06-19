@@ -10,13 +10,15 @@ export default function SignupPage() {
   const [birthDate, setBirthDate] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [telNumber, setTelNumber] = useState('');
+  const [mail, setMail] = useState('');
 
 
 async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
       //вызов функции из api/api.ts для регистрации пользователя
-      const res = await signupUser({ username, password, firstName, lastName, birthDate });
+      const res = await signupUser({ username, password, firstName, lastName, birthDate, telNumber, mail });
       Cookies.set('token', res.data.token, { expires: 1 });
       window.location.href = '/my-profile';
     } catch (err) {
@@ -31,6 +33,8 @@ async function handleSubmit(e: React.FormEvent) {
       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} placeholder="Дата рождения" />
       <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Логин" />
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
+      <input type="telNumber" value={telNumber} onChange={(e) => setTelNumber(e.target.value)} placeholder="Телефон" />
+      <input type="mail" value={mail} onChange={(e) => setMail(e.target.value)} placeholder="Почта" />
       <button type="submit">Зарегистрироваться</button>
       <Link href="/auth/signin">Уже зарегистрированы?</Link>
     </form>
