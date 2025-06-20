@@ -23,7 +23,7 @@
     padding: 10px 15px;
     border-radius: 4px;
     font-size: $font-size-small;
-    color: $color-indigo-700;
+    color: $white-color;
     margin-bottom: 10px;
   }
 
@@ -85,12 +85,12 @@
 
     &:hover {
       border-color: $blue-color;
-      background-color: $color-indigo-400;
+      background-color: $color-indigo-200;
     }
 
     &--selected {
       border-color: $color-indigo-700;
-      background-color: $color-indigo-600;
+      background-color: $color-indigo-200;
     }
 
     &__title {
@@ -117,22 +117,7 @@
   font-weight: $font-weight-semibold;
 }
 
-.btn--primary {
-  background-color: $color-indigo-700;
-  color: $white-color;
-  border: none;
-  padding: 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: $font-weight-semibold;
-  width: 100%;
-  text-align: center;
-  transition: background-color 0.3s;
 
-  &:hover {
-    background-color: $color-indigo-600;
-  }
-}
 
 .summary__confirm {
   display: flex;
@@ -153,12 +138,10 @@
   margin-bottom: 10px;
 }
 
-
 .product-card {
   display: flex;
   gap: 10px;
   align-items: center;
-
 
   &__img {
     width: 50px;
@@ -174,7 +157,7 @@
 }
 
 .btn--primary {
-  background-color: $color-indigo-700;
+  background-color: $color-indigo-400;
   color: $white-color;
   border: none;
   padding: 12px;
@@ -184,32 +167,14 @@
   width: 100%;
   text-align: center;
   transition: background-color 0.3s;
-}
 
-.btn--primary:hover {
-  background-color: $color-indigo-600;
-}
-
-.summary__confirm {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: $font-size-xsmall;
-  color: $gray-color;
-  margin-top: auto;
-
-  input[type="checkbox"] {
-    margin-top: 3px;
+  &:hover {
+    background-color: $color-indigo-400;
   }
 }
 
-.summary__title {
-  font-weight: 700;
-  font-size: $font-size-large;
-  margin-bottom: 10px;
-}
 
-/* Адаптив для мобильных устройств */
+
 @media (max-width: #{$mobile-max}) {
   .checkout {
     flex-direction: column;
