@@ -95,32 +95,30 @@ class BooksService(
     private fun buildCriteria(searchRequest: SearchBookRequest): Query {
         val query = Query()
 
-        // Добавляем критерий по названию книги (если указано)
         searchRequest.name?.let {
-            query.addCriteria(Criteria.where("name").regex(Pattern.compile(it, Pattern.CASE_INSENSITIVE)))
+            query.addCriteria(Criteria.where("name").regex(it, "i"))
         }
 
-        // Критерий по авторам (возможно несколько авторов)
         searchRequest.authors?.let {
-            query.addCriteria(Criteria.where("author").`in`(it.toList()))
+            query.addCriteria(Criteria.where("author").`in`(it))
         }
 
-        // Критерий по категориям (возможно несколько категорий)
         searchRequest.categories?.let {
-            query.addCriteria(Criteria.where("category").`in`(it.toList()))
+            query.addCriteria(Criteria.where("category").`in`(it))
         }
 
-        // Диапазон цен (minPrice/maxPrice)
         searchRequest.minPrice?.let {
             query.addCriteria(Criteria.where("price").gte(it))
         }
+
         searchRequest.maxPrice?.let {
             query.addCriteria(Criteria.where("price").lte(it))
         }
 
-        // Сортировка (например, по возрастанию или убыванию цены)
+        // Парсинг сортировки (пример: "price,ASC" -> Sort.Order.ASC("price"))
         searchRequest.sortOrder?.let {
-            query.with(Sort.by(it))
+            val (property, direction) = it.split(',')
+            query.with(Sort.by(Sort.Direction.valueOf(direction), property))
         }
 
         return query
