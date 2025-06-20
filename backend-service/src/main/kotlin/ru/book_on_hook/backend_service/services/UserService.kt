@@ -39,7 +39,7 @@ class UserService(
             birthDate = birthDate,
             telNumber = telNumber,
             mail = mail,
-            role = User.Role.ADMIN))
+            role = User.Role.ROLE_ADMIN))
     }
 
     fun createUser(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String, telNumber: String, mail: String): User {
@@ -52,7 +52,7 @@ class UserService(
             birthDate = birthDate,
             telNumber = telNumber,
             mail = mail,
-            role = User.Role.ADMIN))
+            role = User.Role.ROLE_ADMIN))
     }
 
      fun mapUserToDto(user: CustomUserDetails): UserDto {
