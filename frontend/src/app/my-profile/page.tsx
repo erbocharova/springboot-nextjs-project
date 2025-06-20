@@ -2,20 +2,21 @@
 import Cookies from 'js-cookie';
 import { useAuthStatus } from '@/app/hooks/useAuthStatus';
 import { useState, useEffect } from 'react';
-import { getProfile, logout } from '@/app/api/api';
+import { getProfile } from '@/app/api/getProfile';
+import { logout } from '@/app/api/logoutUser';
 import Button from '@/app/ui/button/button';
 
 export default function ProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
-  const isLoggedIn = useAuthStatus();
+  const isAuthenticated = useAuthStatus();
 
   useEffect(() => {
 
-    if (isLoggedIn) {
+    if (isAuthenticated) {
       const token = Cookies.get('token');
       if (!token) {
         console.error('Токен не найден');
-        window.location.href = '/auth/signin';
+        window.location.href = '/auth/sign-in';
         return;
       }
 
@@ -23,11 +24,11 @@ export default function ProfilePage() {
       getProfile(token)
         .then((res) => setUserInfo(res.data))
         .catch((err) => {
-          window.location.href = '/auth/signin';
+          window.location.href = '/auth/sign-in';
         });
     }
     else {
-      window.location.href = '/auth/signin';
+      window.location.href = '/auth/sign-in';
     }
   }, []);
 
@@ -44,3 +45,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

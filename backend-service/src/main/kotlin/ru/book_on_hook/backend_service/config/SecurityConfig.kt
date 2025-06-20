@@ -70,7 +70,6 @@ class SecurityConfig (
 
                     .requestMatchers(
                         "/api/auth/logout",
-                        "/api/my-profile/**",
                         "/api/my-profile",
                         "/api/orders/**").authenticated()
 

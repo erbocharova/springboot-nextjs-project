@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -74,15 +75,16 @@ class BookController(
         description = "Книга не найдена.",
         content = [Content(
             mediaType = "text/plain",
-            schema = Schema(type = "string"),
-            examples = [ExampleObject(value = "Книга с ID b001 не найдена")]
+            examples = [ExampleObject(value = """
+                    {"error": "Книга с ID b001 не найдена"}
+                    """)]
         )]
     )
     @GetMapping("/{id}")
     fun getBookById(@PathVariable id: String): ResponseEntity<*> {
         val book = booksService.getBookById(id)
         if (book == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.TEXT_PLAIN).body("Книга с ID $id не найдена.")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("error" to "Книга с ID $id не найдена"))
         }
         return ResponseEntity.ok(book)
     }
@@ -343,29 +345,31 @@ class BookController(
         responseCode = "400",
         description = "Некорректный запрос.",
         content = [Content(
-            mediaType = "text/plain",
-            schema = Schema(type = "string"),
-            examples = [ExampleObject(value = "Невалидные данные для поиска.")]
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Невалидные данные для поиска"}
+                    """)]
         )]
     )
     @ApiResponse(
         responseCode = "500",
         description = "Внутренняя ошибка сервера",
         content = [Content(
-            mediaType = "text/plain",
-            schema = Schema(type = "string"),
-            examples = [ExampleObject(value = "Произошла ошибка при поиске книг.")]
+            mediaType = "application/json",
+            examples = [ExampleObject(value = """
+                    {"error": "Ошибка при поиске книг"}
+                    """)]
         )]
     )
     @GetMapping("/search")
-    fun searchBooks(@RequestBody searchRequest: SearchBookRequest): ResponseEntity<*>  {
+    fun searchBooks(@ModelAttribute searchRequest: SearchBookRequest): ResponseEntity<*>  {
         return try {
             val books = booksService.searchBooks(searchRequest)
             ResponseEntity.ok(books)
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().contentType(MediaType.TEXT_PLAIN).body("Невалидные данные для поиска.")
+            ResponseEntity.badRequest().body(mapOf("error" to "Невалидные данные для поиска"))
         } catch (e: Exception) {
-            ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body("Произошла ошибка при поиске книг.")
+            ResponseEntity.internalServerError().body(mapOf("error" to "Ошибка при поиске книг"))
         }
     }
 }

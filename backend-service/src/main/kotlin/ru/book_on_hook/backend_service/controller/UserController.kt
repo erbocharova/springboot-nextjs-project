@@ -150,7 +150,7 @@ class UserController(
             request.telNumber,
             request.mail
         )
-        val token = jwtUtil.generateToken(createdUser.username)
+        val token = jwtUtil.generateToken(createdUser.username, createdUser.role)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("token" to token))
     }
 
@@ -209,7 +209,7 @@ class UserController(
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Неверный пароль"))
         }
 
-        val token = jwtUtil.generateToken(user.username)
+        val token = jwtUtil.generateToken(user.username, user.role)
         return ResponseEntity.ok(mapOf("token" to token))
     }
 
