@@ -1,0 +1,26 @@
+@import "../../styles/vars";
+
+.book-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-indigo-600;
+    border-radius: 4px;
+  }
+
+  &__loading,
+  &__error {
+    font-size: $font-size-medium;
+    color: $gray-color;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+  }
+}
