@@ -17,6 +17,20 @@
     gap: 20px;
   }
 
+  .product-covers-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .product-cover {
+    width: 64px;
+    height: 94px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
   &__notice {
     background-color: $color-indigo-400;
     border: 1px solid $color-indigo-600;
@@ -35,7 +49,7 @@
 
   &__summary {
     flex: 1 1 35%;
-    background: $light-gray;
+    background: $white-color;
     padding: 20px;
     border-radius: 4px;
     font-size: $font-size-medium;
@@ -43,6 +57,19 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+
+    & > h2 {
+      border-bottom: 1px solid $card-border-color;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      font-weight: $font-weight-semibold;
+    }
+
+    .product-covers-row {
+      border-bottom: 1px solid $card-border-color;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
   }
 }
 
@@ -120,15 +147,15 @@
 
 
 .summary__confirm {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  display: block;
+  margin-top: 12px;
   font-size: $font-size-xsmall;
   color: $gray-color;
-  margin-top: auto;
 
   input[type="checkbox"] {
     margin-top: 3px;
+    vertical-align: middle;
+    margin-right: 6px;
   }
 }
 
@@ -140,6 +167,7 @@
 
 .product-card {
   display: flex;
+  flex-wrap: nowrap;
   gap: 10px;
   align-items: center;
 

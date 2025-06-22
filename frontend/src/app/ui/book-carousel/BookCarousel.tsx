@@ -1,8 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { BookCard } from '../book-card/BookCard'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
 import './book-carousel.scss'
+import { getAllBooks } from '../../api/books/getAllBooks'
 
 interface Book {
   id: string
@@ -12,19 +18,53 @@ interface Book {
   imageUrl: string
 }
 
-export const BookCarousel: React.FC = () => {
+interface BookCarouselProps {
+  token: string
+}
+
+// Хук для определения мобильного устройства по ширине из CSS переменной
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const rootStyles = getComputedStyle(document.documentElement)
+    const mobileMaxStr = rootStyles.getPropertyValue('--mobile-max').trim()
+    const mobileMax = mobileMaxStr.endsWith('px')
+      ? parseInt(mobileMaxStr.slice(0, -2))
+      : parseInt(mobileMaxStr)
+
+    const mediaQuery = window.matchMedia(`(max-width: ${mobileMax}px)`)
+
+    const handler = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches)
+    }
+
+    mediaQuery.addEventListener('change', handler)
+
+    setIsMobile(mediaQuery.matches)
+
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
+  return isMobile
+}
+
+export const BookCarousel: React.FC<BookCarouselProps> = ({ token }) => {
+  const router = useRouter()
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [slidesPerView, setSlidesPerView] = useState(3)
+  const isMobile = useIsMobile()
+  const [cartItems, setCartItems] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/books/all')
-        if (!response.ok) {
-          throw new Error('Ошибка при загрузке книг')
-        }
-        const data = await response.json()
+        const data = await getAllBooks(token)
         setBooks(data)
       } catch (err) {
         setError((err as Error).message)
@@ -33,7 +73,47 @@ export const BookCarousel: React.FC = () => {
       }
     }
     fetchBooks()
+  }, [token])
+
+  useEffect(() => {
+    // Инициализация cartItems из localStorage
+    const storedCart = localStorage.getItem('cartItems')
+    if (storedCart) {
+      setCartItems(new Set(JSON.parse(storedCart)))
+    }
   }, [])
+
+  // Динамический расчет slidesPerView по ширине контейнера
+  useEffect(() => {
+    const calculateSlidesPerView = () => {
+      if (!containerRef.current) return
+      const containerWidth = containerRef.current.offsetWidth
+      const slideMinWidth = 180
+      const spaceBetween = 16
+      // Учитываем отступы между слайдами при вычислении количества видимых слайдов
+      const slidesCount = Math.floor((containerWidth + spaceBetween) / (slideMinWidth + spaceBetween))
+      setSlidesPerView(slidesCount > 0 ? slidesCount : 1)
+    }
+
+    calculateSlidesPerView()
+    window.addEventListener('resize', calculateSlidesPerView)
+    return () => window.removeEventListener('resize', calculateSlidesPerView)
+  }, [])
+
+  const handleAddToCart = (bookId: string) => {
+    const newCart = new Set(cartItems)
+    newCart.add(bookId)
+    setCartItems(newCart)
+    localStorage.setItem('cartItems', JSON.stringify(Array.from(newCart)))
+  }
+
+  const handleCheckout = () => {
+    router.push('/checkout')
+  }
+
+  const handleCardClick = (bookId: string) => {
+    router.push(`/book/${bookId}`)
+  }
 
   if (loading) {
     return <div className="book-carousel__loading">Загрузка...</div>
@@ -44,16 +124,38 @@ export const BookCarousel: React.FC = () => {
   }
 
   return (
-    <div className="book-carousel">
-      {books.map((book) => (
-        <BookCard
-          key={book.id}
-          title={book.name}
-          author={book.author}
-          price={book.price}
-          cover={book.imageUrl}
-        />
-      ))}
+    <div className="book-carousel" ref={containerRef}>
+      <Swiper
+        modules={isMobile ? [Autoplay] : [Navigation]}
+        slidesPerView={slidesPerView}
+        spaceBetween={16}
+        navigation={!isMobile}
+        autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
+        loop={true}
+        loopAdditionalSlides={slidesPerView}
+      >
+        {books.map((book) => (
+          <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
+            <BookCard
+              title={book.name}
+              author={book.author}
+              price={book.price}
+              cover={book.imageUrl}
+              onAddToCart={
+                cartItems.has(book.id)
+                  ? undefined
+                  : () => handleAddToCart(book.id)
+              }
+              onClick={() => handleCardClick(book.id)}
+            />
+            {cartItems.has(book.id) && (
+              <button className="book-carousel__checkout-button" onClick={handleCheckout}>
+                Оформить
+              </button>
+            )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
