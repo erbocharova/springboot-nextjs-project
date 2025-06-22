@@ -2,85 +2,144 @@
 
 .catalog {
   padding: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
 
   .title {
-    font-size: $font-size-xxlarge;
+    font-size: 36px;
     margin-bottom: 24px;
+    color: $black-color;
+    text-align: center;
+  }
+
+  .topBar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+
+  .sortWrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .sortLabel {
+    margin-right: 8px;
+    font-size: $font-size-large;
     color: $black-color;
   }
 
+  .select {
+    width: 180px;
+    padding: 8px;
+    font-size: $font-size-large;
+    color: $black-color;
+    background-color: $white-color;
+    border: 1px solid $input-placeholder-border-color;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+
   .filters {
+    position: sticky;
+    top: 80px;
+    left: 0;
+    width: 280px;
+    height: calc(100vh - 80px);
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 16px;
-    margin-bottom: 32px;
+    color: $black-color;
+    border-right: 1px solid #EEE;
+    padding: 16px;
+    background-color: $white-color;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
 
-    > div {
-      flex: 1 1 200px;
-      min-width: 180px;
-      color: $black-color;
+  .contentWrapper {
+    display: flex;
+    gap: 24px;
+  }
+
+  .priceFilter {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .applyButton {
+    background-color: $color-indigo-600;
+    color: $white-color;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: $font-size-medium;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover,
+    &:focus {
+      background-color: $color-indigo-700;
+      outline: none;
     }
 
-    select, input {
-      color: $black-color ;
-      background-color: $white-color;
-      border: 1px solid $input-placeholder-border-color;
-      border-radius: 4px;
-      padding: 8px;
-      font-size: $font-size-large;
-    }
-
-    .select {
-      width: 100%;
-      padding: 8px;
-      font-size: $font-size-large;
-      color: $black-color;
-      background-color: $white-color;
-      border: 1px solid $input-placeholder-border-color;
-      border-radius: 4px;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
-    }
-
-    // Переопределение цвета текста для кнопки аккордеона внутри фильтров
-    .accordion-block {
-      .expanding-info-button {
-        color: $black-color !important;
-      }
-    }
-
-    // Новый класс для черного цвета текста кнопки аккордеона
-    .accordionButtonBlack {
-      color: $black-color !important;
-    }
-
-    @media (max-width: 600px) {
-      flex-direction: column;
-      gap: 12px;
-
-      > div {
-        min-width: 100%;
-      }
-
-      select, input, .select {
-        font-size: $font-size-medium;
-        padding: 6px;
-      }
+    &:active {
+      transform: scale(0.98);
     }
   }
 
   .booksGrid {
+    flex: 1;
+ 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
+    background-color: $white-color;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 16px;
   }
 
   .error {
     color: $error-color;
     font-weight: bold;
+  }
+
+  // Responsive breakpoints
+  @media (max-width: 1200px) {
+    .booksGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .contentWrapper {
+      margin-left: 0;
+      flex-direction: column;
+    }
+
+    .filters {
+      position: relative;
+      width: 100%;
+      height: auto;
+      border-right: none;
+      padding: 0;
+      background-color: transparent;
+      z-index: auto;
+      margin-bottom: 16px;
+      top: auto;
+      height: auto;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .booksGrid {
+      grid-template-columns: 1fr;
+    }
   }
 }
