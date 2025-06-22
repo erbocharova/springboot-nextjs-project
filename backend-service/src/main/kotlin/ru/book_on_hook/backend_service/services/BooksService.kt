@@ -107,12 +107,11 @@ class BooksService(
             query.addCriteria(Criteria.where("category").`in`(it))
         }
 
-        searchRequest.minPrice?.let {
-            query.addCriteria(Criteria.where("price").gte(it))
-        }
-
-        searchRequest.maxPrice?.let {
-            query.addCriteria(Criteria.where("price").lte(it))
+        if (searchRequest.minPrice != null || searchRequest.maxPrice != null) {
+            val priceCriteria = Criteria.where("price")
+            searchRequest.minPrice?.let { priceCriteria.gte(it) }
+            searchRequest.maxPrice?.let { priceCriteria.lte(it) }
+            query.addCriteria(priceCriteria)
         }
 
         // Парсинг сортировки (пример: "price,ASC" -> Sort.Order.ASC("price"))
