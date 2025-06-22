@@ -23,6 +23,7 @@
     "react-hook-form": "^7.57.0",
     "react-toastify": "^11.0.5",
     "sass": "^1.89.0",
+    "swiper": "^11.2.8",
     "yup": "^1.6.1"
   },
   "devDependencies": {
