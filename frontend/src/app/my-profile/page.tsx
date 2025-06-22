@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { logout } from '@/app/api/logoutUser';
 import Button from '@/app/ui/button/button';
 import { BookCarousel } from '@/app/ui/book-carousel/BookCarousel';
+import { AdminBookCarousel } from '@/app/ui/admin-book-carousel/AdminBookCarousel';
 import { AddBookNotification } from '@/app/ui/notifications/AddBookNotification';
 import { getProfile, GetProfileResponse } from '@/app/api/getProfile';
 import './page.scss';
@@ -10,6 +11,8 @@ import './page.scss';
 export default function ProfilePage() {
   const [showAddBookNotification, setShowAddBookNotification] = useState(false);
   const [profileData, setProfileData] = useState<GetProfileResponse | null>(null);
+  const [token, setToken] = useState<string>('');
+  const [showAdminCarouselModal, setShowAdminCarouselModal] = useState(false);
 
   const handleBookAdded = () => {
     // Можно добавить логику обновления списка книг, если нужно
@@ -18,40 +21,23 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = document.cookie
+        const tokenFromCookie = document.cookie
           .split('; ')
           .find(row => row.startsWith('token='))
           ?.split('=')[1];
-        if (!token) {
+        if (!tokenFromCookie) {
           alert('Токен не найден');
           return;
         }
-        const data = await getProfile(token);
+        setToken(tokenFromCookie);
+        const data = await getProfile(tokenFromCookie);
         setProfileData(data);
-      } catch (error) {
+      } catch {
         alert('Ошибка при получении профиля');
       }
     };
     fetchProfile();
   }, []);
-
-  const handleGetProfile = async () => {
-    try {
-      const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
-      if (!token) {
-        alert('Токен не найден');
-        return;
-      }
-      const data = await getProfile(token);
-      setProfileData(data);
-      alert(`Профиль пользователя: ${JSON.stringify(data, null, 2)}`);
-    } catch (error) {
-      alert('Ошибка при получении профиля');
-    }
-  };
 
   return (
     <div>
@@ -59,7 +45,7 @@ export default function ProfilePage() {
       <div className="my-profile-buttons">
         <Button onClick={() => logout()} text="Выйти" icon={null} className={undefined} style={undefined} />
         <Button onClick={() => setShowAddBookNotification(true)} text="Добавить книгу" icon={null} className={undefined} style={undefined} />
-        
+        <Button onClick={() => setShowAdminCarouselModal(true)} text="Показать админскую карусель" icon={null} className={undefined} style={undefined} />
       </div>
       {profileData && (
         <div className="my-profile-content">
@@ -72,12 +58,20 @@ export default function ProfilePage() {
           <p><strong>Роль:</strong> {profileData.role}</p>
         </div>
       )}
-      <BookCarousel />
+      {token && <BookCarousel token={token} />}
       {showAddBookNotification && (
         <AddBookNotification
           onClose={() => setShowAddBookNotification(false)}
           onBookAdded={handleBookAdded}
         />
+      )}
+      {showAdminCarouselModal && token && (
+        <div className="modal-overlay" onClick={() => setShowAdminCarouselModal(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowAdminCarouselModal(false)}>×</button>
+            <AdminBookCarousel token={token} />
+          </div>
+        </div>
       )}
     </div>
   );
