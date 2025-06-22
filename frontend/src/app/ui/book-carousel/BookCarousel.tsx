@@ -20,6 +20,7 @@ interface Book {
 
 interface BookCarouselProps {
   token: string
+  title?: string
 }
 
 // Хук для определения мобильного устройства по ширине из CSS переменной
@@ -51,13 +52,12 @@ const useIsMobile = () => {
   return isMobile
 }
 
-export const BookCarousel: React.FC<BookCarouselProps> = ({ token }) => {
+export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   const router = useRouter()
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [slidesPerView, setSlidesPerView] = useState(3)
   const isMobile = useIsMobile()
   const [cartItems, setCartItems] = useState<Set<string>>(new Set())
 
@@ -81,23 +81,6 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token }) => {
     if (storedCart) {
       setCartItems(new Set(JSON.parse(storedCart)))
     }
-  }, [])
-
-  // Динамический расчет slidesPerView по ширине контейнера
-  useEffect(() => {
-    const calculateSlidesPerView = () => {
-      if (!containerRef.current) return
-      const containerWidth = containerRef.current.offsetWidth
-      const slideMinWidth = 180
-      const spaceBetween = 16
-      // Учитываем отступы между слайдами при вычислении количества видимых слайдов
-      const slidesCount = Math.floor((containerWidth + spaceBetween) / (slideMinWidth + spaceBetween))
-      setSlidesPerView(slidesCount > 0 ? slidesCount : 1)
-    }
-
-    calculateSlidesPerView()
-    window.addEventListener('resize', calculateSlidesPerView)
-    return () => window.removeEventListener('resize', calculateSlidesPerView)
   }, [])
 
   const handleAddToCart = (bookId: string) => {
@@ -124,38 +107,62 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token }) => {
   }
 
   return (
-    <div className="book-carousel" ref={containerRef}>
-      <Swiper
-        modules={isMobile ? [Autoplay] : [Navigation]}
-        slidesPerView={slidesPerView}
-        spaceBetween={16}
-        navigation={!isMobile}
-        autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
-        loop={true}
-        loopAdditionalSlides={slidesPerView}
-      >
-        {books.map((book) => (
-          <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
-            <BookCard
-              title={book.name}
-              author={book.author}
-              price={book.price}
-              cover={book.imageUrl}
-              onAddToCart={
-                cartItems.has(book.id)
-                  ? undefined
-                  : () => handleAddToCart(book.id)
-              }
-              onClick={() => handleCardClick(book.id)}
-            />
-            {cartItems.has(book.id) && (
-              <button className="book-carousel__checkout-button" onClick={handleCheckout}>
-                Оформить
-              </button>
-            )}
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <div className="book-carousel-container">
+      {title && <h2 className="book-carousel__title">{title}</h2>}
+      <div className="book-carousel" ref={containerRef}>
+        <Swiper
+          modules={isMobile ? [Autoplay] : [Navigation]}
+          spaceBetween={8}
+          navigation={!isMobile}
+          autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
+          loop={true}
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+              spaceBetween: 8,
+            },
+            480: {
+              slidesPerView: 2,
+              spaceBetween: 8,
+            },
+            640: {
+              slidesPerView: 3,
+              spaceBetween: 8,
+            },
+            768: {
+              slidesPerView: 4,
+              spaceBetween: 8,
+            },
+            1024: {
+              slidesPerView: 5,
+              spaceBetween: 8,
+            },
+            1280: {
+              slidesPerView: 5,
+              spaceBetween: 8,
+            },
+          }}
+        >
+          {books.map((book) => (
+            <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
+              <BookCard
+                title={book.name}
+                author={book.author}
+                price={book.price}
+                cover={book.imageUrl}
+                onAddToCart={
+                  cartItems.has(book.id)
+                    ? undefined
+                    : () => handleAddToCart(book.id)
+                }
+                onClick={() => handleCardClick(book.id)}
+                addedToCart={cartItems.has(book.id)}
+                onCheckout={() => handleCheckout()}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   )
 }
