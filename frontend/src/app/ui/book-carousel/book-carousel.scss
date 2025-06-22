@@ -2,7 +2,7 @@
 
 .book-carousel {
   display: flex;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   gap: 1rem;
   padding: 1rem 0;
 
@@ -22,5 +22,22 @@
     padding: 1rem;
     text-align: center;
     width: 100%;
+  }
+
+  &__checkout-button {
+    margin-top: 0.5rem;
+    width: 100%;
+    background-color: $color-indigo-400;
+    color: $white-color;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($color-indigo-400, 10%);
+    }
   }
 }

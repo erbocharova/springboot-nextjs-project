@@ -1,0 +1,86 @@
+@import '../styles/vars';
+
+.catalog {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .title {
+    font-size: $font-size-xxlarge;
+    margin-bottom: 24px;
+    color: $black-color;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+
+    > div {
+      flex: 1 1 200px;
+      min-width: 180px;
+      color: $black-color;
+    }
+
+    select, input {
+      color: $black-color ;
+      background-color: $white-color;
+      border: 1px solid $input-placeholder-border-color;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: $font-size-large;
+    }
+
+    .select {
+      width: 100%;
+      padding: 8px;
+      font-size: $font-size-large;
+      color: $black-color;
+      background-color: $white-color;
+      border: 1px solid $input-placeholder-border-color;
+      border-radius: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+    }
+
+    // Переопределение цвета текста для кнопки аккордеона внутри фильтров
+    .accordion-block {
+      .expanding-info-button {
+        color: $black-color !important;
+      }
+    }
+
+    // Новый класс для черного цвета текста кнопки аккордеона
+    .accordionButtonBlack {
+      color: $black-color !important;
+    }
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 12px;
+
+      > div {
+        min-width: 100%;
+      }
+
+      select, input, .select {
+        font-size: $font-size-medium;
+        padding: 6px;
+      }
+    }
+  }
+
+  .booksGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+  }
+
+  .error {
+    color: $error-color;
+    font-weight: bold;
+  }
+}
