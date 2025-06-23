@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { searchBooks } from '../api/books/searchBooks'
 import { getAllBooks } from '../api/books/getAllBooks'
 import { BookCard } from '../ui/book-card/BookCard'
 import Filter from './Filter'
-import styles from './catalog.module.scss'
+import  './catalog.scss'
 
 const CatalogPage = () => {
   const [token, setToken] = useState('')
@@ -91,18 +91,18 @@ const CatalogPage = () => {
   }, [filters, sortOption, fetchBooks])
 
   return (
-    <section className={styles.catalog}>
-      <h1 className={styles.title}>Каталог товаров</h1>
-      <div className={styles.topBar}>
-        <div className={styles.sortWrapper}>
-          <label htmlFor="sortSelect" className={styles.sortLabel}>
+    <section className={"catalog"}>
+      <h1 className={"title"}>Каталог товаров</h1>
+      <div className={"topBar"}>
+        <div className={"sortWrapper"}>
+          <label htmlFor="sortSelect" className={"sortLabel"}>
             Сортировать по:
           </label>
           <select
             id="sortSelect"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className={styles.select}
+            className={"select"}
             aria-label="Сортировка книг"
           >
             <option value="price">Цена</option>
@@ -110,7 +110,7 @@ const CatalogPage = () => {
           </select>
         </div>
       </div>
-      <div className={styles.contentWrapper}>
+      <div className={"contentWrapper"}>
         <Filter
           minPrice={minPrice}
           maxPrice={maxPrice}
@@ -131,24 +131,16 @@ const CatalogPage = () => {
           setInStockFilter={(inStock) => setFilters((prev) => ({ ...prev, inStock }))}
           onApplyPriceFilter={handleApplyPriceFilter}
         />
-        <section className={styles.booksGrid} aria-live="polite" aria-busy={loading}>
+        <section className={"booksGrid"} aria-live="polite" aria-busy={loading}>
           {loading && <p>Загрузка...</p>}
-          {error && <p className={styles.error}>Ошибка: {error}</p>}
+          {error && <p className={"error"}>Ошибка: {error}</p>}
           {!loading && !error && books.length === 0 && <p>Книги не найдены</p>}
           {!loading &&
             !error &&
             books.map((book) => (
               <BookCard
                 key={book.id}
-                id={book.id}
-                title={book.name}
-                author={book.author}
-                price={book.price}
-                cover={book.imageUrl}
-                addedToCart={false}
-                onAddToCart={() => {}}
-                onClick={() => {}}
-                onCheckout={() => {}}
+                book={book}
               />
             ))}
         </section>
