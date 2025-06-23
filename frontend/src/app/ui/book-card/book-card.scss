@@ -1,7 +1,7 @@
 @import "../../styles/vars";
 
 .book-card {
-  background-color: $white-color;
+  background-color: rgba(0, 0, 0, 0.06);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -10,14 +10,14 @@
   outline-offset: 2px;
   max-width: 230px;
   min-height: 210px;
-  max-height: 500px;
+  max-height: 380px;
   display: flex;
   flex-direction: column;
   
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   &:active {
@@ -64,14 +64,13 @@
   &__bottom-row {
     margin-top: 5%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
   }
 
   &__price-container {
-    font-weight: 500;
-    color: $gray-color;
-    font-size: 1rem;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-xlarge;
     margin: 2%;
   }
 

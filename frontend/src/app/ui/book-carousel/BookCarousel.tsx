@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { BookCard } from '../book-card/BookCard'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper/modules'
@@ -43,7 +42,6 @@ const useIsMobile = () => {
     }
 
     mediaQuery.addEventListener('change', handler)
-
     setIsMobile(mediaQuery.matches)
 
     return () => mediaQuery.removeEventListener('change', handler)
@@ -53,7 +51,7 @@ const useIsMobile = () => {
 }
 
 export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
-  const router = useRouter()
+ 
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -61,6 +59,7 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   const isMobile = useIsMobile()
   const [cartItems, setCartItems] = useState<Set<string>>(new Set())
 
+  // Загрузка списка книг
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -76,27 +75,12 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   }, [token])
 
   useEffect(() => {
-    // Инициализация cartItems из localStorage
     const storedCart = localStorage.getItem('cartItems')
     if (storedCart) {
       setCartItems(new Set(JSON.parse(storedCart)))
     }
   }, [])
 
-  const handleAddToCart = (bookId: string) => {
-    const newCart = new Set(cartItems)
-    newCart.add(bookId)
-    setCartItems(newCart)
-    localStorage.setItem('cartItems', JSON.stringify(Array.from(newCart)))
-  }
-
-  const handleCheckout = () => {
-    router.push('/checkout')
-  }
-
-  const handleCardClick = (bookId: string) => {
-    router.push(`/book/${bookId}`)
-  }
 
   if (loading) {
     return <div className="book-carousel__loading">Загрузка...</div>
@@ -107,62 +91,34 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   }
 
   return (
-    <div className="book-carousel-container">
+    <div className="book-carousel-container" ref={containerRef}>
       {title && <h2 className="book-carousel__title">{title}</h2>}
-      <div className="book-carousel" ref={containerRef}>
-        <Swiper
-          modules={isMobile ? [Autoplay] : [Navigation]}
-          spaceBetween={8}
-          navigation={!isMobile}
-          autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
-          loop={true}
-          breakpoints={{
-            320: {
-              slidesPerView: 1,
-              spaceBetween: 8,
-            },
-            480: {
-              slidesPerView: 2,
-              spaceBetween: 8,
-            },
-            640: {
-              slidesPerView: 3,
-              spaceBetween: 8,
-            },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 8,
-            },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 8,
-            },
-            1280: {
-              slidesPerView: 5,
-              spaceBetween: 8,
-            },
-          }}
-        >
-          {books.map((book) => (
-            <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
-              <BookCard
-                title={book.name}
-                author={book.author}
-                price={book.price}
-                cover={book.imageUrl}
-                onAddToCart={
-                  cartItems.has(book.id)
-                    ? undefined
-                    : () => handleAddToCart(book.id)
-                }
-                onClick={() => handleCardClick(book.id)}
-                addedToCart={cartItems.has(book.id)}
-                onCheckout={() => handleCheckout()}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+      <Swiper
+        modules={isMobile ? [Autoplay] : [Navigation]}
+        className='swiper'
+        
+        spaceBetween={8}
+
+        navigation={!isMobile}
+        autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
+        loop={true}
+        breakpoints={{
+          320:  { slidesPerView: 1, spaceBetween: 8 },
+          480:  { slidesPerView: 2, spaceBetween: 8 },
+          640:  { slidesPerView: 3, spaceBetween: 8 },
+          768:  { slidesPerView: 4, spaceBetween: 8 },
+          1024: { slidesPerView: 5, spaceBetween: 8 },
+          1280: { slidesPerView: 6, spaceBetween: 8 },
+        }}
+      >
+        {books.map((book) => (
+          <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
+            <BookCard
+              book={book}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }

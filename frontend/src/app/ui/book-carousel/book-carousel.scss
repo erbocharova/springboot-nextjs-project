@@ -25,7 +25,10 @@
     text-align: center;
     width: 100%;
   }
-
+  .swiper {
+    flex: 1;
+    overflow: visible; // важно: стрелки не обрезаются
+  }
 }
 .book-carousel__title {
   font-size: 1.5rem;
