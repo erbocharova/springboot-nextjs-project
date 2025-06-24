@@ -14,6 +14,7 @@ interface Book {
   price: number
   oldPrice?: number
   imageUrl: string
+  stockQuantity: number // складское количество
 }
 
 interface CartItem extends Book {
@@ -37,10 +38,18 @@ export default function CartPage() {
     if (ids.length > 0) {
       Promise.all(
         ids.map(async (id) => {
-          const bookData = await getBookById(token, id)
+          const data = await getBookById(token, id)
+          const stockQuantity = Number(data.quantity)
+          const quantity = cartItemsMap[id]
           return {
-            ...bookData,
-            quantity: cartItemsMap[id],
+            id: data.id,
+            name: data.name,
+            author: data.author,
+            price: Number(data.price),
+            oldPrice: data.old_price ? Number(data.old_price) : undefined,
+            imageUrl: data.imageUrl,
+            stockQuantity,
+            quantity,
             selected: true,
           }
         })
@@ -81,9 +90,11 @@ export default function CartPage() {
       items.map((item) => {
         if (item.id === id) {
           const newQuantity = item.quantity + delta
+          const maxQuantity = item.stockQuantity // складское количество
+          console.log(`changeQuantity called for id=${id}, delta=${delta}, current quantity=${item.quantity}, maxQuantity=${maxQuantity}, newQuantity=${newQuantity}`)
           return {
             ...item,
-            quantity: newQuantity > 0 ? newQuantity : 1,
+            quantity: newQuantity > 0 ? (newQuantity <= maxQuantity ? newQuantity : maxQuantity) : 1,
           }
         }
         return item
@@ -100,9 +111,8 @@ export default function CartPage() {
   const totalOldPrice = cartItems.reduce(
     (sum, item) =>
       item.selected && item.oldPrice ? sum + item.oldPrice * item.quantity : sum,
-    0
-  )
-  const totalDiscount = totalOldPrice - totalPrice + discount
+    0)
+
 
   // Обработка промокода (заглушка)
   const applyPromoCode = () => {
@@ -155,7 +165,26 @@ export default function CartPage() {
                 <div className="cart-page__item-quantity">
                   <Button onClick={() => changeQuantity(item.id, -1)} text="-" icon={null} className="" style={{}} />
                   <span>{item.quantity}</span>
-                  <Button onClick={() => changeQuantity(item.id, 1)} text="+" icon={null} className="" style={{}} />
+                  {item.quantity < item.stockQuantity ? (
+                    <Button
+                      onClick={() => changeQuantity(item.id, 1)}
+                      text="+"
+                      icon={null}
+                      className=""
+                      style={{}}
+                    />
+                  ) : (
+                    <Button
+                      onClick={() => changeQuantity(item.id, 1)}
+                      text="+"
+                      icon={null}
+                      className=""
+                      style={{ display: 'none' }}
+                    />
+                  )}
+                </div>
+                <div className="cart-page__item-max-quantity">
+                  Максимум доступно: {item.stockQuantity}
                 </div>
                 <div className="cart-page__item-prices">
                   {item.oldPrice && (
@@ -195,7 +224,7 @@ export default function CartPage() {
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value)}
               />
-          <Button onClick={applyPromoCode} text="Применить" icon={null} className="" style={{}} />
+              <Button onClick={applyPromoCode} text="Применить" icon={null} className="" style={{}} />
             </div>
             <div className="cart-page__summary-row cart-page__total">
               <span>Итого без учета доставки:</span>
