@@ -5,6 +5,7 @@ import { BookCard } from '../book-card/BookCard'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper/modules'
 import { getAllBooks } from '../../api/books/getAllBooks'
+import { loadCartItems } from '@/app/api/cartStorage'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import './book-carousel.scss'
@@ -74,10 +75,9 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ title }) => {
   }, [])
 
   useEffect(() => {
-    const storedCart = localStorage.getItem('cartItems')
-    if (storedCart) {
-      setCartItems(new Set(JSON.parse(storedCart)))
-    }
+    const storedMap = loadCartItems()
+    const ids = Object.keys(storedMap)
+    setCartItems(new Set(ids))
   }, [])
 
 

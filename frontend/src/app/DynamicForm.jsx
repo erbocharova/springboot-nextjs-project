@@ -5,7 +5,7 @@ import InputField from "./ui/input-field/InputField";
 import { formConfigs } from "./formConfigs";
 import { makeYupSchema } from "./makeYupSchema";
 
-export default function DynamicForm({ formType, onSubmit, onValidChange }) {
+export default function DynamicForm({ formType, onSubmit, onValidChange, initialData }) {
   const config = formConfigs[formType];
   if (!config) {
     return <div>Форма с типом "{formType}" не найдена.</div>;
@@ -16,10 +16,18 @@ export default function DynamicForm({ formType, onSubmit, onValidChange }) {
     control,
     handleSubmit,
     formState: { errors, isValid },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: initialData || {},
   });
+
+  React.useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+    }
+  }, [initialData, reset]);
 
   React.useEffect(() => {
     if (onValidChange) {
@@ -89,6 +97,9 @@ export default function DynamicForm({ formType, onSubmit, onValidChange }) {
           );
         })}
       </div>
+      <button type="submit" className="btn btn--primary btn--full" style={{ marginTop: "1rem" }}>
+        Отправить
+      </button>
     </form>
   );
 }
