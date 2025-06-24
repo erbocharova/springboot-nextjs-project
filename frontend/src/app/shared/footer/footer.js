@@ -14,12 +14,12 @@ const categories = [
 ];
 
 const helpList = [
-    "Как сделать заказ",
-    "Оплата",
-    "Курьерская доставка",
-    "Поддержка",
-    "Пользовательское соглашение"
-]
+    { id: 'ordering', title: 'Как сделать заказ' },
+    { id: 'payment', title: 'Оплата' },
+    { id: 'delivery', title: 'Курьерская доставка' },
+    { id: 'support', title: 'Поддержка' },
+    { id: 'terms', title: 'Пользовательское соглашение' }
+  ];
 
 const Footer = () => {
     const MOBILE_MAX_WIDTH = 768;
@@ -68,8 +68,8 @@ const Footer = () => {
                     accordionBody={
                         <ul className="footer__links__help__list">
                             {helpList.map((helpOption) => (
-                                <li key={helpOption}>
-                                    <Link href="#">{helpOption}</Link>
+                                <li key={helpOption.id}>
+                                    <Link href={`/help#${helpOption.id}`}>{helpOption.title}</Link>
                                 </li>
                             ))}
                         </ul>

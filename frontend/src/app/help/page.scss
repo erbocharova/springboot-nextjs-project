@@ -1,0 +1,61 @@
+@import "@/app/styles/vars";
+
+.help-container {
+    min-height: 100vh;
+    padding: 16px;
+    margin: 0 auto;
+
+
+    @media screen and (max-device-width: $mobile-max) {
+        padding: 0 1rem;
+    }
+
+    &__title {
+        margin-bottom: 3rem;
+        text-align: start;
+        font-size: $font-size-36;
+        font-weight: $font-weight-semibold;
+        color: $color-indigo-600;
+
+        @media screen and (max-device-width: $mobile-max) {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: $font-size-xxlarge;
+        }
+    }
+
+    &__sections {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+
+        &__section {
+            background: $white-color;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px $box-shadow-color;
+
+
+            @media screen and (max-device-width: $mobile-max) {
+                padding: 1.5rem;
+            }
+
+            &__title {
+                font-size: $font-size-xxlarge;
+                margin-bottom: 1.5rem;
+                color: $color-indigo-600;
+                position: relative;
+
+
+                @media screen and (max-device-width: $mobile-max) {
+                    font-size: $font-size-xlarge;
+                }
+            }
+
+            &__content {
+                line-height: 1.6;
+                color: $black-color;
+            }
+        }
+    }
+}
