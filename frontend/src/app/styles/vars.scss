@@ -7,10 +7,12 @@ $desktop: 1020px;
 
 //Colors
 $color-indigo-400: #7c86ff;
+$color-indigo-200: #a3bffa;
 $color-indigo-600: #4f39f6;
 $color-indigo-700: #432dd7;
 $black-color: #111111;
 $gray-color: #626364;
+$error-color: #dc3545;
 $yellow-color: #ffc85e;
 $orange-color: #f3a50d;
 $white-color: #ffffff;
@@ -24,6 +26,7 @@ $button-bg-color: #ffc85e;
 $light-control-button-color: rgba(255, 200, 94, 0.3);
 $button-hover-bg-color: #f3a50d;
 $button-active-bg-color: #ffa500;
+$input-placeholder-border-color : #ccc;
 $input-placeholder-color: rgba(237, 237, 237, 1);
 $blur-gradient-light-gray: rgba(138, 148, 171, 1);
 $blur-gradient-dark-gray: rgba(138, 148, 171, 0);

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import ru.book_on_hook.backend_service.dao.User
 import java.nio.charset.StandardCharsets
 import java.security.Key
 import java.util.Date
@@ -23,6 +24,11 @@ class JwtUtil(
         return claims.subject
     }
 
+    fun extractRoleFromToken(token: String): String {
+        val claims = parseClaimsFromToken(token)
+        return claims.get("role", String::class.java)
+    }
+
     private fun parseClaimsFromToken(token: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(getSigningKey())
@@ -36,11 +42,12 @@ class JwtUtil(
         return SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.jcaName)
     }
 
-    fun generateToken(subject: String): String {
+    fun generateToken(subject: String, role: User.Role): String {
         val nowMillis = System.currentTimeMillis()
         val expMillis = nowMillis + expirationTimeMs
         return Jwts.builder()
             .setSubject(subject)
+            .claim("role", role.name)
             .setIssuedAt(Date(nowMillis))
             .setExpiration(Date(expMillis))
             .signWith(getSigningKey())

@@ -23,12 +23,14 @@ const navCategories = [
 
 const Header = () => {
   const [isNotificationOpen, setNotificationOpen] = useState(false);
-  const { isLoggedIn } = useAuthStatus();
+  const { isAuthenticated } = useAuthStatus();
 
-  const catalogButtonClick = () => {
+  const findButtonClick = () => {
     window.location.href = window.location.href;
   };
-
+  const catalogButtonClick = () => {
+    window.location.href = "/catalog";
+  };
   const toggleNotification = () => {
     setNotificationOpen(!isNotificationOpen);
   };
@@ -42,6 +44,14 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
+          
+          <Button
+            className="catalog-button"
+            title = "Каталог"
+            onClick={catalogButtonClick}
+           text={"Каталог"}
+            />
+                 
         </div>
 
         <div className="header-center">
@@ -50,7 +60,7 @@ const Header = () => {
             inputType="text"
             id="searchInput"
             placeholder="Поиск по Лабиринту"
-            onClick={catalogButtonClick}
+            onClick={findButtonClick}
             icon="/icons/find.svg"
           />
         </div>
@@ -65,21 +75,31 @@ const Header = () => {
             />
             <NotificationPopup visible={isNotificationOpen} onClose={closeNotification} />
           </div>
-            <Link href="/my-profile" passHref>
-              <Button
-                className="icon-button"
-                icon="/icons/profile.svg"
-                title="Мой Лабиринт"
-              />
+          {isAuthenticated ?
+          <Link href="/my-profile" passHref>
+            <Button
+              className="icon-button"
+              icon="/icons/profile.svg"
+              title="Мой кабинет"
+            />
           </Link>
+          :
+          <Link href="/auth/sign-in" passHref>
+            <Button
+              className="icon-button"
+              icon="/icons/profile.svg"
+              title="Вход"
+            />
+          </Link>
+          }
           <Link href="/cart" passHref>
-              <Button
-                className="icon-button cart-button"
-                icon="/icons/cart-icon.svg"
-                title="Корзина"
-              >
-                <span className="cart-badge">0</span>
-              </Button>
+            <Button
+              className="icon-button cart-button"
+              icon="/icons/cart-icon.svg"
+              title="Корзина"
+            >
+              <span className="cart-badge">0</span>
+            </Button>
           </Link>
         </div>
       </div>
