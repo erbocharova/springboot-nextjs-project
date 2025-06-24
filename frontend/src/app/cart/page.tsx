@@ -1,7 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { getBookById } from '@/app/api/books/getBookById'
-import Button from '@/app/ui/button/button'
+import CartItem from './CartItem'
+import CartSummary from './CartSummary'
 import { useRouter } from 'next/navigation'
 import { useAuthStatus } from '@/app/hooks/useAuthStatus'
 import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
@@ -46,14 +47,17 @@ export default function CartPage() {
             name: data.name,
             author: data.author,
             price: Number(data.price),
-            oldPrice: data.old_price ? Number(data.old_price) : undefined,
+            oldPrice: data.old_price !== undefined && data.old_price !== null ? Number(data.old_price) : 0,
             imageUrl: data.imageUrl,
             stockQuantity,
             quantity,
             selected: true,
           }
         })
-      ).then((items) => setCartItems(items))
+      ).then((items) => {
+        console.log('Loaded cart items:', items)
+        setCartItems(items)
+      })
     }
   }, [])
 
@@ -102,17 +106,12 @@ export default function CartPage() {
     )
   }
 
-  // Подсчет итогов
+
   const totalPrice = cartItems.reduce(
     (sum, item) =>
       item.selected ? sum + item.price * item.quantity : sum,
     0
   )
-  const totalOldPrice = cartItems.reduce(
-    (sum, item) =>
-      item.selected && item.oldPrice ? sum + item.oldPrice * item.quantity : sum,
-    0)
-
 
   // Обработка промокода (заглушка)
   const applyPromoCode = () => {
@@ -147,114 +146,25 @@ export default function CartPage() {
               <p className="cart-page__empty">Ваша корзина пуста.</p>
             )}
             {cartItems.map((item) => (
-              <div key={item.id} className="cart-page__item">
-                <input
-                  type="checkbox"
-                  checked={item.selected}
-                  onChange={() => toggleSelectItem(item.id)}
-                />
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className="cart-page__item-image"
-                />
-                <div className="cart-page__item-info">
-                  <div className="cart-page__item-title">{item.name}</div>
-                  <div className="cart-page__item-author">{item.author}</div>
-                </div>
-                <div className="cart-page__item-quantity-wrapper">
-                  <div className="cart-page__item-quantity">
-                    <Button
-                      onClick={() => changeQuantity(item.id, -1)}
-                      text="-"
-                      icon={null}
-                      className=""
-                      style={{}}
-                      disabled={item.quantity <= 1}
-                    />
-                    <span>{item.quantity}</span>
-                    <Button
-                      onClick={() => changeQuantity(item.id, 1)}
-                      text="+"
-                      icon={null}
-                      className=""
-                      style={{}}
-                      disabled={item.quantity >= item.stockQuantity}
-                    />
-                  </div>
-                  <div className="cart-page__item-max-quantity">
-                    максимум доступно: {item.stockQuantity}
-                  </div>
-                </div>
-                <div className="cart-page__item-prices">
-                  {item.oldPrice && (
-                    <span className="cart-page__item-old-price">
-                      {item.oldPrice} ₽
-                    </span>
-                  )}
-                  <span className="cart-page__item-price">
-                    {item.quantity} × {item.price} ₽ = {item.quantity * item.price} ₽
-                  </span>
-                </div>
-              </div>
+              <CartItem
+                key={item.id}
+                item={item}
+                toggleSelectItem={toggleSelectItem}
+                changeQuantity={changeQuantity}
+              />
             ))}
           </div>
         </div>
-        <div className="cart-page__right">
-          <h2 className="cart-page__summary-title">
-            {cartItems.filter((item) => item.selected).length} товара
-          </h2>
-          <div className="cart-page__summary">
-            <div className="cart-page__summary-row">
-              <span>Цена товаров (без скидки):</span>
-              <span>{totalOldPrice.toFixed(2)} ₽</span>
-            </div>
-            <div className="cart-page__summary-row">
-              <span>Скидка на товары:</span>
-              <span>0 ₽</span>
-            </div>
-            <div className="cart-page__summary-row">
-              <span>Оплата балансом:</span>
-              <span>0 ₽</span>
-            </div>
-            <div className="cart-page__summary-row cart-page__promo-code">
-              <input
-                type="text"
-                placeholder="Промокод"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-              />
-              <Button onClick={applyPromoCode} text="Применить" icon={null} className="" style={{}} />
-            </div>
-            <div className="cart-page__summary-row cart-page__total">
-              <span>Итого без учета доставки:</span>
-              <span>{(totalPrice - discount).toFixed(2)} ₽</span>
-            </div>
-          </div>
-          {isAuthenticated ? (
-            <Button
-              className="cart-page__checkout-button"
-              onClick={handleCheckout}
-              text="К оформлению"
-              icon={null}
-              style={{}}
-            />
-          ) : (
-            <div className="cart-page__not-authenticated">
-              <p>Пожалуйста, зарегистрируйтесь, чтобы оформить заказ.</p>
-              <Button
-                className="cart-page__register-button"
-                onClick={() => router.push('/auth/sign-in')}
-                text="Регистрация"
-                icon={null}
-                style={{}}
-              />
-            </div>
-          )}
-          <div className="cart-page__delivery-info">
-            <div>Доставка: Москва, 25 мая</div>
-          </div>
-        </div>
+        <CartSummary
+          cartItems={cartItems}
+          discount={discount}
+          promoCode={promoCode}
+          setPromoCode={setPromoCode}
+          applyPromoCode={applyPromoCode}
+          isAuthenticated={isAuthenticated}
+          handleCheckout={handleCheckout}
+          onRegisterClick={() => router.push('/auth/sign-in')}
+        />
       </div>
     </div>
   )
