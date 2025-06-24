@@ -184,7 +184,7 @@
 
     ul {
       display: flex;
-      gap: 15px;
+      gap: 20px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -193,11 +193,19 @@
       @media screen and (max-width: $desktop) {
         flex-wrap: nowrap;
       }
+
+      @media screen and (max-width: $mobile-max) {
+        gap: 8px;
+      }
     }
 
     li {
-      font-size: $font-size-small;
+      font-size: $font-size-large;
       font-weight: $font-weight-semibold;
+
+      @media screen and (max-width: $mobile-max) {
+        font-size: $font-size-small;
+      }
 
       a {
         color: $white-color;
@@ -206,7 +214,11 @@
         display: block;
 
         &:hover {
-          color: $yellow-color;
+          color: $color-indigo-400;
+        }
+
+        &:active {
+          color: $color-indigo-600;
         }
       }
     }

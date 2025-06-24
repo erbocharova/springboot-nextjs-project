@@ -8,17 +8,16 @@ import NotificationPopup from "@/app/shared/notification-popup/NotificationPopup
 import { useAuthStatus } from "@/app/hooks/useAuthStatus";
 
 import "./header.scss";
+import { title } from "process";
+
+const helpList = [
+  ];
 
 const navCategories = [
-  "Книги",
-  "Иностранные",
-  "Главное",
-  "Школа",
-  "Канцтовары",
-  "Игрушки",
-  "Еще",
-  "Клуб",
-  "Ростов-на-Дону — доставка",
+  { ref: 'catalog', title: 'Каталог'},
+  { ref: 'help#payment', title: 'Оплата' },
+  { ref: 'help#delivery', title: 'Доставка' },
+  { ref: 'help#support', title: 'Поддержка' }
 ];
 
 const Header = () => {
@@ -28,9 +27,7 @@ const Header = () => {
   const findButtonClick = () => {
     window.location.href = window.location.href;
   };
-  const catalogButtonClick = () => {
-    window.location.href = "/catalog";
-  };
+
   const toggleNotification = () => {
     setNotificationOpen(!isNotificationOpen);
   };
@@ -44,13 +41,6 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
-          
-          <Button
-            className="catalog-button"
-            title = "Каталог"
-            onClick={catalogButtonClick}
-           text={"Каталог"}
-            />
                  
         </div>
 
@@ -107,8 +97,8 @@ const Header = () => {
       <nav className="header-nav-categories">
         <ul>
           {navCategories.map((category) => (
-            <li key={category}>
-              <Link href="#">{category}</Link>
+            <li key={category.ref}>
+              <Link href={`/${category.ref}`}>{category.title}</Link>
             </li>
           ))}
         </ul>
