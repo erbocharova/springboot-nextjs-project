@@ -162,29 +162,29 @@ export default function CartPage() {
                   <div className="cart-page__item-title">{item.name}</div>
                   <div className="cart-page__item-author">{item.author}</div>
                 </div>
-                <div className="cart-page__item-quantity">
-                  <Button onClick={() => changeQuantity(item.id, -1)} text="-" icon={null} className="" style={{}} />
-                  <span>{item.quantity}</span>
-                  {item.quantity < item.stockQuantity ? (
+                <div className="cart-page__item-quantity-wrapper">
+                  <div className="cart-page__item-quantity">
+                    <Button
+                      onClick={() => changeQuantity(item.id, -1)}
+                      text="-"
+                      icon={null}
+                      className=""
+                      style={{}}
+                      disabled={item.quantity <= 1}
+                    />
+                    <span>{item.quantity}</span>
                     <Button
                       onClick={() => changeQuantity(item.id, 1)}
                       text="+"
                       icon={null}
                       className=""
                       style={{}}
+                      disabled={item.quantity >= item.stockQuantity}
                     />
-                  ) : (
-                    <Button
-                      onClick={() => changeQuantity(item.id, 1)}
-                      text="+"
-                      icon={null}
-                      className=""
-                      style={{ display: 'none' }}
-                    />
-                  )}
-                </div>
-                <div className="cart-page__item-max-quantity">
-                  Максимум доступно: {item.stockQuantity}
+                  </div>
+                  <div className="cart-page__item-max-quantity">
+                    максимум доступно: {item.stockQuantity}
+                  </div>
                 </div>
                 <div className="cart-page__item-prices">
                   {item.oldPrice && (
