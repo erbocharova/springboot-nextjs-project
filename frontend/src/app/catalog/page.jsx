@@ -43,7 +43,6 @@ const CatalogPage = () => {
       if (filters.inStock) searchRequest.inStock = true
       if (sortOption) searchRequest.sort = sortOption
 
-      // Если фильтры пустые, загружаем все книги
       const noFilters =
         !searchRequest.name &&
         !searchRequest.authors &&
@@ -56,7 +55,6 @@ const CatalogPage = () => {
       let data
       if (noFilters) {
         data = await getAllBooks(token)
-        // Extract categories dynamically from data
         if (data.length > 0) {
           const cats = Array.from(new Set(data.map((book) => book.category)))
           setCategories(cats)

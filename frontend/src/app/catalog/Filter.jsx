@@ -111,7 +111,7 @@ const Filter = ({
           <InputField
             value={minPriceFilter}
             onChange={(e) => setMinPriceFilter(e.target.value)}
-            placeholder={`Минимальная цена (${minPrice})`}
+            placeholder={`Мин. (${minPrice})`}
             aria-label="Минимальная цена"
             type="number"
             min={0}
@@ -119,7 +119,7 @@ const Filter = ({
           <InputField
             value={maxPriceFilter}
             onChange={(e) => setMaxPriceFilter(e.target.value)}
-            placeholder={`Максимальная цена (${maxPrice})`}
+            placeholder={`Макс. (${maxPrice})`}
             aria-label="Максимальная цена"
             type="number"
             min={0}

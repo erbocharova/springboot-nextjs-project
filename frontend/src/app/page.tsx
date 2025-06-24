@@ -1,10 +1,11 @@
 import { BookCarousel } from './ui/book-carousel/BookCarousel'
+import './page.scss'
 
 export default function Home() {
   return (
-    <section>
+    <section className='home-content'>
       <BookCarousel title="Популярное"/>
-      <BookCarousel title="По Приколу"/>
+      <BookCarousel title="Вы смотрели"/>
     </section>
   )
 }

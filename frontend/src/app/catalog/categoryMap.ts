@@ -1,12 +1,12 @@
 const categoryMap: Record<string, string> = {
-  FANTASY: 'Фантастика',
-  SCHOOL: 'Школа',
-  HISTORY: 'История',
-  children: 'Детские книги',
-  fantasy: 'Фэнтези',
-  business: 'Бизнес',
+  ADVENTURE: 'Приключения',
   DETECTIVE:'Детективы',
-  // добавь остальные нужные категории
+  HISTORICAL: 'Исторический роман',
+  FANTASY: 'Фэнтези',
+  ROMANCE: 'Роман',
+  HORROR: 'Ужасы',
+  SCHOOL: 'Школа',
+  KIDS: 'Детские книги'
 }
 
 export default categoryMap

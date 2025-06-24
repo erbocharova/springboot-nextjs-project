@@ -4,10 +4,10 @@ import React, { useEffect, useState, useRef } from 'react'
 import { BookCard } from '../book-card/BookCard'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper/modules'
+import { getAllBooks } from '../../api/books/getAllBooks'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import './book-carousel.scss'
-import { getAllBooks } from '../../api/books/getAllBooks'
 
 interface Book {
   id: string
@@ -18,7 +18,6 @@ interface Book {
 }
 
 interface BookCarouselProps {
-  token: string
   title?: string
 }
 
@@ -50,8 +49,8 @@ const useIsMobile = () => {
   return isMobile
 }
 
-export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
- 
+export const BookCarousel: React.FC<BookCarouselProps> = ({ title }) => {
+
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -63,7 +62,7 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await getAllBooks(token)
+        const data = await getAllBooks()
         setBooks(data)
       } catch (err) {
         setError((err as Error).message)
@@ -72,7 +71,7 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
       }
     }
     fetchBooks()
-  }, [token])
+  }, [])
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cartItems')
@@ -91,26 +90,31 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
   }
 
   return (
-    <div className="book-carousel-container" ref={containerRef}>
+    <div className="book-carousel" ref={containerRef}>
       {title && <h2 className="book-carousel__title">{title}</h2>}
+      <div className="book-carousel__container">
       <Swiper
         modules={isMobile ? [Autoplay] : [Navigation]}
+        navigation={{
+          prevEl: '.swiper-button-prev',
+          nextEl: '.swiper-button-next',
+        }}
         className='swiper'
-        
+
         spaceBetween={8}
 
-        navigation={!isMobile}
         autoplay={isMobile ? { delay: 4000, disableOnInteraction: false } : undefined}
         loop={true}
         breakpoints={{
-          320:  { slidesPerView: 1, spaceBetween: 8 },
-          480:  { slidesPerView: 2, spaceBetween: 8 },
-          640:  { slidesPerView: 3, spaceBetween: 8 },
-          768:  { slidesPerView: 4, spaceBetween: 8 },
-          1024: { slidesPerView: 5, spaceBetween: 8 },
-          1280: { slidesPerView: 6, spaceBetween: 8 },
+          320: { slidesPerView: 1 },
+          480: { slidesPerView: 2 },
+          640: { slidesPerView: 3 },
+          768: { slidesPerView: 4 },
+          1024: { slidesPerView: 5 },
+          1280: { slidesPerView: 6 },
         }}
       >
+        <div className="swiper-button-prev"></div>
         {books.map((book) => (
           <SwiperSlide key={book.id} style={{ minWidth: 180 }}>
             <BookCard
@@ -118,7 +122,9 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ token, title }) => {
             />
           </SwiperSlide>
         ))}
+        <div className="swiper-button-next"></div>
       </Swiper>
+      </div>
     </div>
   )
 }

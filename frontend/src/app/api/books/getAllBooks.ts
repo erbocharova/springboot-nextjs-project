@@ -2,11 +2,9 @@ import axios, { AxiosError } from 'axios';
 import { showAlert } from '@/app/alerts';
 import { API_URL } from '../url';
 
-export async function getAllBooks(token: string) {
+export async function getAllBooks() {
   try {
-    const response = await axios.get(`${API_URL}/books/all`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.get(`${API_URL}/books/all`);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
