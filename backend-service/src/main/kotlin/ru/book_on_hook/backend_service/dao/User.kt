@@ -13,5 +13,5 @@ data class User(
     var mail: String,
     val role: Role
 ) {
-    enum class Role { USER, ADMIN }
+    enum class Role { ROLE_USER, ROLE_ADMIN }
 }

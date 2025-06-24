@@ -25,10 +25,12 @@ const Header = () => {
   const [isNotificationOpen, setNotificationOpen] = useState(false);
   const { isAuthenticated } = useAuthStatus();
 
-  const catalogButtonClick = () => {
+  const findButtonClick = () => {
     window.location.href = window.location.href;
   };
-
+  const catalogButtonClick = () => {
+    window.location.href = "/catalog";
+  };
   const toggleNotification = () => {
     setNotificationOpen(!isNotificationOpen);
   };
@@ -42,6 +44,14 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
+          
+          <Button
+            className="catalog-button"
+            title = "Каталог"
+            onClick={catalogButtonClick}
+           text={"Каталог"}
+            />
+                 
         </div>
 
         <div className="header-center">
@@ -50,7 +60,7 @@ const Header = () => {
             inputType="text"
             id="searchInput"
             placeholder="Поиск по Лабиринту"
-            onClick={catalogButtonClick}
+            onClick={findButtonClick}
             icon="/icons/find.svg"
           />
         </div>

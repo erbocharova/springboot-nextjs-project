@@ -3,7 +3,7 @@ import { showAlert } from '@/app/alerts';
 import { API_URL } from './url';
 import { ApiErrorResponse } from './ApiErrorResponse';
 
-interface GetProfileResponse {
+export interface GetProfileResponse {
     username: string;
     firstName: string;
     lastName: string

@@ -15,7 +15,7 @@ export default function RootLayout({
         <>
         <AlertProvider>
           <Header />
-          <main className="py-8">{children}</main>
+          <main className="py-8 px-4 sm:px-6 lg:px-8">{children}</main>
           <Footer />
         </AlertProvider>
         </>
@@ -23,4 +23,3 @@ export default function RootLayout({
     </html>
   )
 }
-

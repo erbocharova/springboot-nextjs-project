@@ -24,6 +24,11 @@ class JwtUtil(
         return claims.subject
     }
 
+    fun extractRoleFromToken(token: String): String {
+        val claims = parseClaimsFromToken(token)
+        return claims.get("role", String::class.java)
+    }
+
     private fun parseClaimsFromToken(token: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(getSigningKey())

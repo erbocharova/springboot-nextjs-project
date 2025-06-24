@@ -4,6 +4,7 @@ import Button from "../ui/button/button";
 import DynamicForm from "../DynamicForm";
 import PaymentOptionButton from "./PaymentOptionButton";
 import "./checkout.scss";
+import { getAllBooks } from "../api/books/getAllBooks";
 
 const CheckoutPage = () => {
   const [products, setProducts] = useState([]);
@@ -19,29 +20,25 @@ const CheckoutPage = () => {
   ];
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchProducts = async () => {
+    const loadCartProducts = async () => {
       try {
-        const res = await fetch(process.env.NEXT_PUBLIC_PRODUCTS_URL || "http://localhost:8080/products");
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await res.json();
-        if (isMounted) {
-          setProducts(data);
+        const storedCart = localStorage.getItem("cartItems");
+        if (!storedCart) {
+          setProducts([]);
           setLoading(false);
+          return;
         }
+        const cartIds = JSON.parse(storedCart);
+        const allBooks = await getAllBooks(); // Получаем все книги
+        const filteredBooks = allBooks.filter(book => cartIds.includes(book.id));
+        setProducts(filteredBooks);
       } catch (err) {
-        if (isMounted) {
-          setError(err.message);
-          setLoading(false);
-        }
+        setError("Ошибка загрузки товаров из корзины");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchProducts();
-    return () => {
-      isMounted = false;
-    };
+    loadCartProducts();
   }, []);
 
   const [formData, setFormData] = React.useState(null);
@@ -75,12 +72,58 @@ const CheckoutPage = () => {
       if (!response.ok) throw new Error("Ошибка при создании заказа");
       const result = await response.json();
       console.log("Результат оплаты через СБП:", result);
-      setFormResult({ success: true, message: "Заказ успешно создан", order: result });
+      setFormResult((prev) => ({ ...prev, success: true, message: "Заказ успешно создан", order: result, paymentMethod: "sbp" }));
     } catch (error) {
       console.error("Ошибка при оплате через СБП:", error);
-      setFormResult({ success: false, message: error.message });
+      setFormResult((prev) => ({ ...prev, success: false, message: error.message }));
     }
   };
+
+  const handleCardPayment = async () => {
+    if (!isFormValid) {
+      alert("Пожалуйста, заполните все обязательные поля корректно.");
+      return;
+    }
+    if (formResult?.paymentMethod && formResult.paymentMethod !== "card") {
+      alert("Пожалуйста, выберите способ оплаты картой на сайте.");
+      return;
+    }
+    // Здесь можно добавить логику оплаты картой на сайте
+    alert("Оплата картой на сайте пока не реализована.");
+    setFormResult((prev) => ({ ...prev, paymentMethod: "card" }));
+  };
+
+  const handleCashPayment = async () => {
+    if (!isFormValid) {
+      alert("Пожалуйста, заполните все обязательные поля корректно.");
+      return;
+    }
+    if (formResult?.paymentMethod && formResult.paymentMethod !== "cash") {
+      alert("Пожалуйста, выберите способ оплаты при получении.");
+      return;
+    }
+    // Здесь можно добавить логику оплаты при получении
+    alert("Оплата при получении пока не реализована.");
+    setFormResult((prev) => ({ ...prev, paymentMethod: "cash" }));
+  };
+
+  const handlePayment = () => {
+    switch (formResult?.paymentMethod) {
+      case "sbp":
+        handleSbpPayment();
+        break;
+      case "card":
+        handleCardPayment();
+        break;
+      case "cash":
+        handleCashPayment();
+        break;
+      default:
+        alert("Пожалуйста, выберите способ оплаты.");
+    }
+  };
+
+  const totalPrice = products.reduce((sum, product) => sum + product.price, 0);
 
   return (
     <main className="checkout">
@@ -136,20 +179,30 @@ const CheckoutPage = () => {
         ) : products.length === 0 ? (
           <p>Нет товаров</p>
         ) : (
-          products.map((product) => (
-            <div key={product.id} className="product-card">
-              <img
-                src={product.image || "/default-product.png"}
-                alt={product.name}
-                className="product-card__img"
-              />
-              <div className="product-card__info">
-                <p>
-                  Цена товаров <span>{product.price} ₽</span>
-                </p>
-              </div>
+          <>
+            <div className="product-covers-row">
+              {products.map((product) => (
+                <img
+                  key={product.id}
+                  src={product.imageUrl || "/default-product.png"}
+                  alt={product.name}
+                  className="product-cover"
+                />
+              ))}
             </div>
-          ))
+            {products.map((product) => (
+              <div key={product.id} className="product-card">
+                <div className="product-card__info">
+                  <p>
+                    Цена товара: <span>{product.price} ₽</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+            <p className="summary__total">
+              Итого: <span>{totalPrice} ₽</span>
+            </p>
+          </>
         )}
         <Button
           text="Оплатить через СБП"

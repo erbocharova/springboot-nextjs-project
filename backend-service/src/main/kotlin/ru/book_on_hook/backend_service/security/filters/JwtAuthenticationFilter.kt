@@ -19,28 +19,41 @@ class JwtAuthenticationFilter(
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-        val header = request.getHeader("Authorization")
-        if (header.isNullOrBlank() || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response)
-            return
+        try {
+            val jwt = parseJwt(request)
+            if (jwt != null && jwtUtil.validateToken(jwt)) {
+                val username = jwtUtil.extractUsernameFromToken(jwt)
+                val role = jwtUtil.extractRoleFromToken(jwt)
+
+                // Загружаем UserDetails (опционально - можно извлекать из токена)
+                val userDetails = customUserDetailsService.loadUserByUsername(username)
+
+                // Создаем аутентификацию
+                val authentication = UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.authorities
+                ).apply {
+                    details = WebAuthenticationDetailsSource().buildDetails(request)
+                }
+
+                SecurityContextHolder.getContext().authentication = authentication
+                logger.debug("Authenticated user: $username with roles: ${userDetails.authorities}")
+            }
+        } catch (e: Exception) {
+            logger.error("Cannot set user authentication", e)
+            // Не прерываем цепочку, чтобы Spring Security мог обработать ошибку
         }
 
-        val jwtToken = header.substring(7) // "Bearer " длина 7 символов
-        if (!jwtUtil.validateToken(jwtToken)) {
-            chain.doFilter(request, response)
-            return
-        }
-
-        val username = jwtUtil.extractUsernameFromToken(jwtToken)
-        val userDetails = customUserDetailsService.loadUserByUsername(username)
-
-        val authentication = UsernamePasswordAuthenticationToken(
-            userDetails, null, userDetails.authorities
-        ).apply {
-            details = WebAuthenticationDetailsSource().buildDetails(request)
-        }
-
-        SecurityContextHolder.getContext().authentication = authentication
         chain.doFilter(request, response)
+    }
+
+    private fun parseJwt(request: HttpServletRequest): String? {
+        val headerAuth = request.getHeader("Authorization")
+        return if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            headerAuth.substring(7)
+        } else {
+            null
+        }
     }
 }

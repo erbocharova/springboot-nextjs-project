@@ -1,0 +1,55 @@
+@import "../../styles/vars";
+
+.book-carousel {
+  position: relative;
+  padding: 2rem 2rem;
+
+  &__container {
+    position: relative;
+    width: 100%;
+  }
+
+  .swiper {
+    padding: 10px 0;
+    overflow: visible;
+    
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 40px;
+      height: 40px;
+      background-color: $color-indigo-600;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      color: $white-color;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      
+      &::after {
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+
+    .swiper-button-prev {
+      left: -20px;
+    }
+
+    .swiper-button-next {
+      right: -20px;
+    }
+  }
+}
+
+.book-carousel__title {
+  font-size: $font-size-36;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: $color-indigo-600;
+  padding: 0;
+
+  @media screen and (max-device-width: $mobile-max) {
+    justify-self: center;
+    font-size: $font-size-xxlarge;
+  }
+}
