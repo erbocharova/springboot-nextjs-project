@@ -4,8 +4,10 @@ import React, { useEffect } from 'react'
 import { getBookById } from '@/app/api/books/getBookById'
 import { loadCartItems, CartItemsMap } from '@/app/api/cartStorage'
 
+import { CartItem} from '@/app/domain/CartItem'
+
 interface CartItemsLoaderProps {
-  setCartItems: React.Dispatch<React.SetStateAction<any[]>>
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>
 }
 
 const CartItemsLoader: React.FC<CartItemsLoaderProps> = ({ setCartItems }) => {

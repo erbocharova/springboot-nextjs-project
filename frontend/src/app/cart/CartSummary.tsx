@@ -2,17 +2,15 @@
 import React from 'react'
 import Button from '@/app/ui/button/button'
 
-interface CartItem {
-  id: string
-  selected: boolean
-  oldPrice?: number
-  price: number
+import { Book } from '@/app/domain/Book'
+
+interface CartItem extends Book {
   quantity: number
+  selected: boolean
 }
 
 interface CartSummaryProps {
   cartItems: CartItem[]
-  totalOldPrice: number
   discount: number
   promoCode: string
   setPromoCode: (code: string) => void
@@ -24,7 +22,6 @@ interface CartSummaryProps {
 
 export default function CartSummary({
   cartItems,
-  totalOldPrice,
   discount,
   promoCode,
   setPromoCode,

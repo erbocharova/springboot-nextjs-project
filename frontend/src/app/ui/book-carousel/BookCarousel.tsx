@@ -10,13 +10,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import './book-carousel.scss'
 
-interface Book {
-  id: string
-  name: string
-  author: string
-  price: number
-  imageUrl: string
-}
+import { Book } from '@/app/domain/Book'
 
 interface BookCarouselProps {
   title?: string

@@ -2,18 +2,15 @@
 import React from 'react'
 import Button from '@/app/ui/button/button'
 
+import { Book } from '@/app/domain/Book'
+
+interface CartItem extends Book {
+  quantity: number
+  selected: boolean
+}
+
 interface CartItemProps {
-  item: {
-    id: string
-    name: string
-    author: string
-    price: number
-    oldPrice?: number
-    imageUrl: string
-    stockQuantity: number
-    quantity: number
-    selected: boolean
-  }
+  item: CartItem
   toggleSelectItem: (id: string) => void
   changeQuantity: (id: string, delta: number) => void
 }

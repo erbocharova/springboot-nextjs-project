@@ -5,13 +5,7 @@ import { useRouter } from 'next/navigation'
 import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
 import './book-card.scss'
 
-interface Book {
-  id: string
-  name: string
-  author: string
-  price: number
-  imageUrl: string
-}
+import { Book } from '@/app/domain/Book'
 
 interface BookCardProps {
   book: Book

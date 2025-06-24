@@ -8,16 +8,7 @@ import { useAuthStatus } from '@/app/hooks/useAuthStatus'
 import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
 import './cart.scss'
 
-interface Book {
-  id: string
-  name: string
-  author: string
-  price: number
-  oldPrice?: number
-  imageUrl: string
-  stockQuantity: number // складское количество
-}
-
+import { Book } from '@/app/domain/Book'
 interface CartItem extends Book {
   quantity: number
   selected: boolean
