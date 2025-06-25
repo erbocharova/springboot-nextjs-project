@@ -1,17 +1,11 @@
-// src/components/book-card/BookCard.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
 import './book-card.scss'
 
-interface Book {
-  id: string
-  name: string
-  author: string
-  price: number
-  imageUrl: string
-}
+import { Book } from '@/app/domain/Book'
 
 interface BookCardProps {
   book: Book
@@ -19,24 +13,26 @@ interface BookCardProps {
 
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const router = useRouter()
-  const [cartItems, setCartItems] = useState<Set<string>>(new Set())
+  const [cartItems, setCartItems] = useState<CartItemsMap>({})
 
   // Инициализируем корзину из localStorage
   useEffect(() => {
-    const stored = localStorage.getItem('cartItems')
-    if (stored) {
-      setCartItems(new Set(JSON.parse(stored)))
-    }
+    const stored = loadCartItems()
+    setCartItems(stored)
   }, [])
 
-  const isInCart = cartItems.has(book.id)
+  const isInCart = book.id in cartItems
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    const next = new Set(cartItems)
-    next.add(book.id)
-    setCartItems(next)
-    localStorage.setItem('cartItems', JSON.stringify(Array.from(next)))
+    e.stopPropagation();
+
+    const updatedCartItems = {
+      ...cartItems,
+      [book.id]: (cartItems[book.id] || 0) + 1,
+    };
+    
+    setCartItems(updatedCartItems);
+    saveCartItems(updatedCartItems);
   }
 
   const handleCardClick = () => {
@@ -45,7 +41,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
   const handleCheckout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    router.push('/checkout')
+    router.push('/cart')
   }
 
   return (

@@ -2,6 +2,7 @@ package ru.book_on_hook.backend_service.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
 import ru.book_on_hook.backend_service.dao.BookInOrderRequest
 import ru.book_on_hook.backend_service.dao.BookOrder.PaymentType
 import java.time.LocalDate
@@ -34,7 +35,7 @@ data class CreateOrderRequest(
     @Schema(description = "Полный адрес доставки заказа", required = true, example = "г. Ростов-на-Дону, ул. Мильчакова, д. 8А")
     val address: String,
 
-    @field:NotBlank(message = "Состав заказа не может быть пустым.")
+    @field:NotEmpty(message = "Состав заказа не может быть пустым.")
     @Schema(description = "Заказанные книги", required = true, implementation = BookInOrderRequest::class)
     val books: List<BookInOrderRequest>,
 

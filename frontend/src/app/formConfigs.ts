@@ -11,6 +11,8 @@ export const formConfigs = {
       { name: "firstName", type: "text", required: true, validators: ["required"], placeholder: "Имя" },
       { name: "lastName", type: "text", required: true, validators: ["required"], placeholder: "Фамилия" },
       { name: "email", type: "email", required: true, validators: ["email", "required"], placeholder: "Email" },
+      { name: "address", type: "text", required: true, validators: ["required"], placeholder: "Адрес" },
+      { name: "deliveryDate", type: "date", required: true, validators: ["required"], placeholder: "Дата доставки" },
     ],
   },
 };
