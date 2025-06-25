@@ -5,10 +5,12 @@ import Button from '@/app/ui/button/button';
 import { AddBookNotification } from '@/app/ui/notifications/AddBookNotification';
 import { getProfile, GetProfileResponse } from '@/app/api/getProfile';
 import './page.scss';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const [showAddBookNotification, setShowAddBookNotification] = useState(false);
   const [profileData, setProfileData] = useState<GetProfileResponse | null>(null);
+  const router = useRouter();
   const [token, setToken] = useState<string>('');
   
 
@@ -31,7 +33,7 @@ export default function ProfilePage() {
         const data = await getProfile(tokenFromCookie);
         setProfileData(data);
       } catch {
-        alert('Ошибка при получении профиля');
+        router.replace('/auth/sign-in')
       }
     };
     fetchProfile();

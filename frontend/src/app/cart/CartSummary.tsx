@@ -13,6 +13,7 @@ interface CartSummaryProps {
   cartItems: CartItem[]
   discount: number
   promoCode: string
+  deliveryDate: string
   setPromoCode: (code: string) => void
   applyPromoCode: () => void
   isAuthenticated: boolean
@@ -29,6 +30,7 @@ export default function CartSummary({
   isAuthenticated,
   handleCheckout,
   onRegisterClick,
+  deliveryDate
 }: CartSummaryProps) {
   const totalPrice = cartItems.reduce(
     (sum, item) =>
@@ -43,32 +45,15 @@ export default function CartSummary({
       </h2>
       <div className="cart-page__summary">
         <div className="cart-page__summary-row">
-          <span>Цена товаров (без скидки):</span>
+          <span>Цена товаров:</span>
           <span>{totalPrice.toFixed(2)} ₽</span>
-        </div>
-        <div className="cart-page__summary-row">
-          <span>Скидка на товары:</span>
-          <span>0 ₽</span>
-        </div>
-        <div className="cart-page__summary-row">
-          <span>Оплата балансом:</span>
-          <span>0 ₽</span>
-        </div>
-        <div className="cart-page__summary-row cart-page__promo-code">
-          <input
-            type="text"
-            placeholder="Промокод"
-            value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value)}
-          />
-          <Button onClick={applyPromoCode} text="Применить" icon={null} className="" style={{}} />
         </div>
         <div className="cart-page__summary-row cart-page__total">
           <span>Итого без учета доставки:</span>
           <span>{(totalPrice - discount).toFixed(2)} ₽</span>
         </div>
       </div>
-      {isAuthenticated ? (
+      {cartItems.length != 0 ? (isAuthenticated ? (
         <Button
           className="cart-page__checkout-button"
           onClick={handleCheckout}
@@ -87,9 +72,9 @@ export default function CartSummary({
             style={{}}
           />
         </div>
-      )}
+      )) : <span></span>}
       <div className="cart-page__delivery-info">
-        <div>Доставка: Москва, 25 мая</div>
+        <div>Доставка: Ростов-на-Дону, {deliveryDate}</div>
       </div>
     </div>
   )

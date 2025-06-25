@@ -55,11 +55,7 @@ export default function CartItem({ item, toggleSelectItem, changeQuantity }: Car
         </div>
       </div>
       <div className="cart-page__item-prices">
-        {item.oldPrice && (
-          <span className="cart-page__item-old-price">
-            {item.oldPrice} ₽
-          </span>
-        )}
+        
         <span className="cart-page__item-price">
           {item.quantity} × {item.price} ₽ = {item.quantity * item.price} ₽
         </span>

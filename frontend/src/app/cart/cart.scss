@@ -5,9 +5,9 @@
   margin: 0 auto;
   font-family: $font-weight-semibold;
   button {
-    background-color: $button-bg-color;
+    background-color: $color-indigo-400;
     &:hover {
-      background-color: $button-active-bg-color;
+      background-color: $color-indigo-600;
     }
   }
   &__title {
@@ -21,7 +21,7 @@
     justify-content: space-between;
     gap: 24px;
 
-    @media (max-width: $mobile-mid) {
+    @media (max-width: $mobile-max) {
       flex-direction: column;
     }
   }

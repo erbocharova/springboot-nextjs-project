@@ -10,8 +10,13 @@
   }
 
   .swiper {
+    position: relative;
     padding: 10px 0;
-    overflow: visible;
+    overflow: hidden;
+
+    .swiper-wrapper {
+      position: relative;
+    }
     
     .swiper-button-prev,
     .swiper-button-next {
@@ -32,11 +37,19 @@
     }
 
     .swiper-button-prev {
-      left: -20px;
+      left: 0;
     }
 
     .swiper-button-next {
-      right: -20px;
+      right: 0;
+    }
+
+    .swiper-slide-active {
+
+      @media screen and (max-device-width: $mobile-max) {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 }

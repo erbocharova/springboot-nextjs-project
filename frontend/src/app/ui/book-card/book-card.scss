@@ -9,8 +9,8 @@
   cursor: pointer;
   outline-offset: 2px;
   max-width: 230px;
-  min-height: 210px;
-  max-height: 380px;
+  width: 100%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   
@@ -30,7 +30,8 @@
   }
 
   &__image {
-    width: 100%;
+    width: 80%;
+    align-self: center;
     height: 15rem;
     object-fit: cover;
     border-top-left-radius: 8px;
@@ -65,6 +66,7 @@
     margin-top: 5%;
     display: flex;
     justify-content: space-evenly;
+    align-self: end;
     align-items: center;
   }
 
@@ -96,7 +98,7 @@
   }
 
   &__button--checkout {
-    width: 100%;
+    width: 80%;
     background-color: $color-indigo-600;
 
     &:hover {

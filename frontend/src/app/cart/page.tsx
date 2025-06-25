@@ -19,18 +19,18 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [selectAll, setSelectAll] = useState(true)
   const [promoCode, setPromoCode] = useState('')
+  const [deliveryDate, setDeliveryDate] = useState('')
   const [discount, setDiscount] = useState(0)
   const router = useRouter()
 
   // Загрузка cartItems из localStorage и получение данных книг
   useEffect(() => {
     const cartItemsMap: CartItemsMap = loadCartItems()
-    const token = localStorage.getItem('token') || ''
     const ids = Object.keys(cartItemsMap)
     if (ids.length > 0) {
       Promise.all(
         ids.map(async (id) => {
-          const data = await getBookById(token, id)
+          const data = await getBookById(id)
           const stockQuantity = Number(data.quantity)
           const quantity = cartItemsMap[id]
           return {
@@ -50,6 +50,22 @@ export default function CartPage() {
         setCartItems(items)
       })
     }
+
+    const calculateDate = () => {
+      const today = new Date();
+      const deliveryDate = new Date(today);
+      deliveryDate.setDate(today.getDate() + 2);
+
+      setDeliveryDate(
+        deliveryDate.toLocaleDateString('ru-RU', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long'
+        })
+      );
+    };
+
+    calculateDate();
   }, [])
 
   // Сохраняем cartItems в localStorage при изменении
@@ -79,84 +95,90 @@ export default function CartPage() {
     )
   }
 
-  // Изменение количества
-  const changeQuantity = (id: string, delta: number) => {
-    setCartItems((items) =>
-      items.map((item) => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + delta
-          const maxQuantity = item.stockQuantity // складское количество
-          console.log(`changeQuantity called for id=${id}, delta=${delta}, current quantity=${item.quantity}, maxQuantity=${maxQuantity}, newQuantity=${newQuantity}`)
-          return {
-            ...item,
-            quantity: newQuantity > 0 ? (newQuantity <= maxQuantity ? newQuantity : maxQuantity) : 1,
-          }
+  const removeCartItem = (id: string) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    return 0;
+  };
+
+// Изменение количества
+const changeQuantity = (id: string, delta: number) => {
+  setCartItems((items) =>
+    items.map((item) => {
+      if (item.id === id) {
+        const newQuantity = item.quantity + delta
+        const maxQuantity = item.stockQuantity // складское количество
+        console.log(`changeQuantity called for id=${id}, delta=${delta}, current quantity=${item.quantity}, maxQuantity=${maxQuantity}, newQuantity=${newQuantity}`)
+        return {
+          ...item,
+          quantity: newQuantity > 0 ? (newQuantity <= maxQuantity ? newQuantity : maxQuantity) : removeCartItem(item.id),
         }
-        return item
-      })
-    )
-  }
-
-
-  const totalPrice = cartItems.reduce(
-    (sum, item) =>
-      item.selected ? sum + item.price * item.quantity : sum,
-    0
+      }
+      return item
+    })
   )
+}
 
-  // Обработка промокода (заглушка)
-  const applyPromoCode = () => {
-    // Пример: скидка 10% при промокоде "DISCOUNT10"
-    if (promoCode === 'DISCOUNT10') {
-      setDiscount(totalPrice * 0.1)
-    } else {
-      setDiscount(0)
-    }
+
+const totalPrice = cartItems.reduce(
+  (sum, item) =>
+    item.selected ? sum + item.price * item.quantity : sum,
+  0
+)
+
+// Обработка промокода (заглушка)
+const applyPromoCode = () => {
+  // Пример: скидка 10% при промокоде "DISCOUNT10"
+  if (promoCode === 'DISCOUNT10') {
+    setDiscount(totalPrice * 0.1)
+  } else {
+    setDiscount(0)
   }
+}
 
-  // Кнопка оформления
-  const handleCheckout = () => {
-    router.push('/checkout')
-  }
+// Кнопка оформления
+const handleCheckout = () => {
+  router.push('/checkout')
+}
 
-  return (
-    <div className="cart-page">
-      <h1 className="cart-page__title">Корзина</h1>
-      <div className="cart-page__container">
-        <div className="cart-page__left">
-          <label className="cart-page__select-all">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={toggleSelectAll}
+return (
+  <div className="cart-page">
+    <h1 className="cart-page__title">Корзина</h1>
+    <div className="cart-page__container">
+      <div className="cart-page__left">
+        <label className="cart-page__select-all">
+          <input
+            type="checkbox"
+            checked={selectAll}
+            onChange={toggleSelectAll}
+          />
+          Выбрать все
+        </label>
+        <div className="cart-page__items">
+          {cartItems.length === 0 && (
+            <p className="cart-page__empty">Ваша корзина пуста.</p>
+          )}
+          {cartItems.map((item) => (
+            <CartItem
+              key={item.id}
+              item={item}
+              toggleSelectItem={toggleSelectItem}
+              changeQuantity={changeQuantity}
             />
-            Выбрать все
-          </label>
-          <div className="cart-page__items">
-            {cartItems.length === 0 && (
-              <p className="cart-page__empty">Ваша корзина пуста.</p>
-            )}
-            {cartItems.map((item) => (
-              <CartItem
-                key={item.id}
-                item={item}
-                toggleSelectItem={toggleSelectItem}
-                changeQuantity={changeQuantity}
-              />
-            ))}
-          </div>
+          ))}
         </div>
-        <CartSummary
-          cartItems={cartItems}
-          discount={discount}
-          promoCode={promoCode}
-          setPromoCode={setPromoCode}
-          applyPromoCode={applyPromoCode}
-          isAuthenticated={isAuthenticated}
-          handleCheckout={handleCheckout}
-          onRegisterClick={() => router.push('/auth/sign-in')}
-        />
       </div>
+      <CartSummary
+        cartItems={cartItems}
+        discount={discount}
+        promoCode={promoCode}
+        setPromoCode={setPromoCode}
+        applyPromoCode={applyPromoCode}
+        isAuthenticated={isAuthenticated}
+        handleCheckout={handleCheckout}
+        onRegisterClick={() => router.push('/auth/sign-in')}
+        deliveryDate={deliveryDate}
+      />
     </div>
-  )
+  </div>
+)
 }

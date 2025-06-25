@@ -175,17 +175,15 @@ const CheckoutPage = () => {
     <main className="checkout">
       <section className="checkout__form">
         <div className="checkout__notice">
-          Уже регистрировались в Book on hook? <a href="#">Войдите в систему</a>, чтобы получить доступ к своим сохранённым данным. Товары в корзине и отложенные товары добавятся в ваш профиль.
+          После создания заказа выбранная дата доставки может измениться. Узнать статус заказа можно в личном кабинете
         </div>
 
         <h1 className="checkout__title">Оформление заказа</h1>
 
         <div className="section section--delivery">
-          <h2 className="section__header">Доставка</h2>
-          <button className="btn btn--outline">+ Новый способ доставки</button>
+          <h2 className="section__header">Курьерская доставка</h2>
           <p className="section__note">
-            В выбранный регион <strong>Ростов-на-Дону</strong> — заказ доставят
-            завтра или позднее.
+            В Ростов-на-Дону доставим через <strong>2 дня</strong> или позднее.
           </p>
         </div>
 

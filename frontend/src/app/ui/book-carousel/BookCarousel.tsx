@@ -5,7 +5,7 @@ import { BookCard } from '../book-card/BookCard'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper/modules'
 import { getAllBooks } from '../../api/books/getAllBooks'
-import { loadCartItems } from '@/app/api/cartStorage'
+import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import './book-carousel.scss'
@@ -45,13 +45,12 @@ const useIsMobile = () => {
 }
 
 export const BookCarousel: React.FC<BookCarouselProps> = ({ title }) => {
-
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
-  const [cartItems, setCartItems] = useState<Set<string>>(new Set())
+  const [cartItems, setCartItems] = useState<CartItemsMap>({})
 
   // Загрузка списка книг
   useEffect(() => {
@@ -66,12 +65,8 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ title }) => {
       }
     }
     fetchBooks()
-  }, [])
 
-  useEffect(() => {
-    const storedMap = loadCartItems()
-    const ids = Object.keys(storedMap)
-    setCartItems(new Set(ids))
+    setCartItems(loadCartItems());
   }, [])
 
 
@@ -101,9 +96,9 @@ export const BookCarousel: React.FC<BookCarouselProps> = ({ title }) => {
         loop={true}
         breakpoints={{
           320: { slidesPerView: 1 },
-          480: { slidesPerView: 2 },
-          640: { slidesPerView: 3 },
-          768: { slidesPerView: 4 },
+          480: { slidesPerView: 1 },
+          640: { slidesPerView: 1 },
+          768: { slidesPerView: 1 },
           1024: { slidesPerView: 5 },
           1280: { slidesPerView: 6 },
         }}

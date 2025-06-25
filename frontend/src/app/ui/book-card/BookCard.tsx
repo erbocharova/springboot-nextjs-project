@@ -24,15 +24,15 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const isInCart = book.id in cartItems
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    const next = { ...cartItems }
-    if (next[book.id]) {
-      next[book.id] += 1
-    } else {
-      next[book.id] = 1
-    }
-    setCartItems(next)
-    saveCartItems(next)
+    e.stopPropagation();
+
+    const updatedCartItems = {
+      ...cartItems,
+      [book.id]: (cartItems[book.id] || 0) + 1,
+    };
+    
+    setCartItems(updatedCartItems);
+    saveCartItems(updatedCartItems);
   }
 
   const handleCardClick = () => {

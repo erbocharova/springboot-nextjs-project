@@ -44,16 +44,7 @@ const Header = () => {
                  
         </div>
 
-        <div className="header-center">
-          <Search
-            className="header-search-form"
-            inputType="text"
-            id="searchInput"
-            placeholder="Поиск по Лабиринту"
-            onClick={findButtonClick}
-            icon="/icons/find.svg"
-          />
-        </div>
+
 
         <div className="header-right">
           <div className="notification-wrapper" style={{ position: "relative" }}>
