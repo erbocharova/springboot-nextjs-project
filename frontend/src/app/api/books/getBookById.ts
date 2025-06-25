@@ -3,11 +3,9 @@ import { showAlert } from '@/app/alerts';
 import { API_URL } from '../url';
 import { ApiErrorResponse } from '../ApiErrorResponse';
 
-export async function getBookById(token: string, id: string) {
+export async function getBookById(id: string) {
   try {
-    const response = await axios.get(`${API_URL}/books/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.get(`${API_URL}/books/${id}`);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<ApiErrorResponse>;
