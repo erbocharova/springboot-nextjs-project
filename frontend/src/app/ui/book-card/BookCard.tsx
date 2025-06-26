@@ -50,6 +50,10 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
+      {book.popular ? 
+      (
+        <p className='book-card__popular'>Популярное</p>
+      ) : (<p className='book-card__new'>Новинка</p>)}
       <img src={book.imageUrl} alt={book.name} className="book-card__image" />
       <div className="book-card__info">
         <h3 className="book-card__title">{book.name}</h3>
@@ -61,8 +65,9 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
             <button
               className="book-card__button"
               onClick={handleAddToCart}
+              disabled={!book.available}
             >
-              В корзину
+              {book.available ? "В корзину" : "Нет в наличии"}
             </button>
           </div>
         ) : (
@@ -70,8 +75,9 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
             <button
               className="book-card__button book-card__button--checkout"
               onClick={handleCheckout}
+              disabled={!book.available}
             >
-              Оформить
+              {book.available ? "Оформить" : "Нет в наличии"}
             </button>
           </div>
         )}

@@ -49,6 +49,16 @@
     @media screen and (max-width: $desktop) {
       margin-bottom: 0;
     }
+
+    h1 {
+      margin-left: 20px;
+      font-size: $font-size-large;
+      font-weight: $font-weight-semibold;
+
+      @media screen and (max-width: $mobile-max) {
+        display: none;
+      }
+    }
   }
 
   .header-center {
@@ -119,6 +129,21 @@
       width: auto;
       justify-content: flex-start;
       gap: 10px;
+    }
+
+    .notification-wrapper {
+
+      &__red-dot {
+        display: inline-block; 
+        z-index: 10000;
+      position: relative;
+      right: -40px;
+      top: -12px;
+      width: 12px;
+      height: 12px;
+      background-color: $light-green-color;
+      border-radius: 100%;
+      }
     }
 
   .icon-button {

@@ -41,13 +41,14 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
-                 
+          <h1>г. Ростов-на-Дону</h1> 
         </div>
 
 
 
         <div className="header-right">
           <div className="notification-wrapper" style={{ position: "relative" }}>
+            <span className="notification-wrapper__red-dot"></span>
             <Button
               className="icon-button"
               icon="/icons/notification.svg"

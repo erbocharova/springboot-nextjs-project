@@ -5,20 +5,17 @@ import Accordion from "@/app/ui/accordion/accordion";
 
 import "./footer.scss";
 
-const categories = [
-    "Книги",
-    "Иностранные",
-    "Школа",
-    "Канцтовары",
-    "Игрушки"
+const feedback = [
+    { title: '+7(900)123-45-67', ref: 'tel:89001234567', icon: '/icons/phone_icon.svg'},
+    { title: 'book_on_hook@mail.ru', ref: 'mailto:book_on_hook@mail.ru', icon: '/icons/mail_icon.svg'},
+    { title: '@book_on_hook_support', ref: 'https://t.me/book_on_hook_support', icon: '/icons/telegram_icon.svg'}
 ];
 
 const helpList = [
     { id: 'ordering', title: 'Как сделать заказ' },
     { id: 'payment', title: 'Оплата' },
     { id: 'delivery', title: 'Курьерская доставка' },
-    { id: 'support', title: 'Поддержка' },
-    { id: 'terms', title: 'Пользовательское соглашение' }
+    { id: 'support', title: 'Поддержка' }
   ];
 
 const Footer = () => {
@@ -44,21 +41,6 @@ const Footer = () => {
     return (
         <footer className="footer">
             <div className="footer__links">
-                <Accordion
-                    className="footer__links__categories"
-                    isAlwaysExpanded={!isMobile}
-                    text="Каталог"
-                    icon="/icons/expand.svg"
-                    accordionBody={
-                        <ul className="footer__links__categories__list">
-                            {categories.map((category) => (
-                                <li key={category}>
-                                    <Link href="#">{category}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                    }
-                />
 
                 <Accordion
                     className="footer__links__help"
@@ -76,6 +58,22 @@ const Footer = () => {
                     }
                 />
 
+                <Accordion
+                    className="footer__links__feedback"
+                    isAlwaysExpanded={!isMobile}
+                    text="Обратная связь"
+                    icon="/icons/expand.svg"
+                    accordionBody={
+                        <ul className="footer__links__feedback__list">
+                            {feedback.map((item) => (
+                                <li key={item.title}>
+                                    <img src={item.icon}/>
+                                    <Link href={item.ref}>{item.title}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    }
+                />
 
 
             </div>

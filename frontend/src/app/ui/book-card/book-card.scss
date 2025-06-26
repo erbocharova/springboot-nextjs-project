@@ -10,7 +10,7 @@
   outline-offset: 2px;
   max-width: 230px;
   width: 100%;
-  height: 400px;
+  height: 420px;
   display: flex;
   flex-direction: column;
   
@@ -27,6 +27,26 @@
 
   &:focus-visible {
     outline: 2px solid $color-indigo-600;
+  }
+
+  &__popular {
+    position: relative;
+    top: 4px;
+    left: 4px;
+    width: 50%;
+    border-radius: 8px;
+    text-align: center;
+    background-color: $light-green-color;
+  }
+
+  &__new {
+    position: relative;
+    top: 4px;
+    left: 4px;
+    width: 50%;
+    border-radius: 8px;
+    text-align: center;
+    background-color: $highlight-color;
   }
 
   &__image {
@@ -94,6 +114,11 @@
 
     &:active {
       transform: scale(0.98);
+    }
+
+    &:disabled {
+      background-color: $color-indigo-400;
+      cursor: not-allowed;
     }
   }
 

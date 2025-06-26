@@ -63,6 +63,7 @@ const Filter = ({
           className="select"
           aria-label="Выбор категории"
         >
+          <option key={'all'} value={''}>Все</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>
               {categoryMap[cat] || cat}

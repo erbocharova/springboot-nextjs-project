@@ -47,6 +47,9 @@ data class BookDto(
     @field:Schema(description = "Количество доступных экземпляров книги", readOnly = true, minimum = "0", example = "10")
     val quantity: Int,
 
+    @field:Schema(description = "Суммарное кол-во экземпляров книги", readOnly = true, minimum = "0", example = "10")
+    val maxQuantity: Int,
+
     /**
      * Доступность книги для приобретения.
      */

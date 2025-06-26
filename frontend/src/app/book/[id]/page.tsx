@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import styles from '../../styles/book.module.scss';
 import { getBookById } from '@/app/api/books/getBookById';
+import { useAuthStatus } from '@/app/hooks/useAuthStatus';
+import { loadCartItems, saveCartItems, CartItemsMap } from '@/app/api/cartStorage'
 import categoryMap from '@/app/catalog/categoryMap';
 import { date } from 'yup';
 
@@ -23,16 +26,20 @@ interface Book {
   imageUrl: string;
   price: number;
   quantity: number;
+  maxQuantity: number;
   available: boolean;
   popular: boolean;
   category: string
 }
 
 export default function BookDetailsPage() {
+  const router = useRouter()
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [cartItems, setCartItems] = useState<CartItemsMap>({});
+  const { isAdmin } = useAuthStatus();
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -59,10 +66,14 @@ export default function BookDetailsPage() {
       );
     };
 
+    const stored = loadCartItems();
+    setCartItems(stored);
+
     fetchBooks();
     calculateDate();
   }, []);
 
+  const isInCart = book ? book.id in cartItems : false;
 
   const scrollToFullDescription = () => {
     const element = document.getElementById('full-description');
@@ -75,9 +86,18 @@ export default function BookDetailsPage() {
     return categoryMap[categoryKey] || categoryKey;
   };
 
-  const handleAddToCart = () => {
-    const discountedPrice = Math.floor(book.price * 0.5);
-    alert(`1 шт. "${book.name}" на сумму ${discountedPrice} ₽ добавлено в корзину`);
+  const handleAddToCart = (book: Book) => {
+    const updatedCartItems = {
+          ...cartItems,
+          [book.id]: (cartItems[book.id] || 0) + 1,
+        };
+        
+        setCartItems(updatedCartItems);
+        saveCartItems(updatedCartItems);
+  };
+
+  const handleCheckout = () => {
+      router.push('/cart')
   };
 
   return (
@@ -135,11 +155,19 @@ export default function BookDetailsPage() {
                     <span className={styles.price}>{book.price} ₽</span>
                   </div>
                 </div>
-                <button onClick={handleAddToCart} className={styles.addToCartButton}>
-                  Перейти в корзину
-                </button>
+
+                {!isInCart ? (
+                <button onClick={() => handleAddToCart(book)} className={styles.addToCartButton} disabled={!book.available}>
+                  {book.available ? "Добавить в корзину" : "Нет в наличии"}
+                </button>)
+                :
+                (
+                  <button onClick={() => handleCheckout()} className={styles.addToCartButton} disabled={!book.available}>
+                    {book.available ? "Оформить" : "Нет в наличии"}
+                  </button>
+                )}
                 <div className={styles.deliveryInfo}>
-                  <p>Ростов-на-Дону — доставим в {deliveryDate}</p>
+                  <p>Доставка в Ростов-на-Дону — {deliveryDate}</p>
                 </div>
               </div>
             </div>
@@ -154,8 +182,11 @@ export default function BookDetailsPage() {
                 <h3 className={styles.sectionTitle}>Все характеристики</h3>
                 <ul className={styles.detailsList}>
                   <li><strong>Автор:</strong> {book.author}</li>
-                  <li><strong>Жанр:</strong> {getCategoryName(book.category)}</li>
+                  <li><strong>Категория/Жанр:</strong> {getCategoryName(book.category)}</li>
                   <li><strong>В наличии:</strong> {book.quantity} шт.</li>
+                  {isAdmin && (
+                    <li><strong>Всего:</strong> {book.maxQuantity} шт.</li>
+                  )}
                 </ul>
               </div>
             </div>
