@@ -57,6 +57,7 @@ class BooksService(
             book.imageUrl,
             book.price,
             book.quantity,
+            book.maxQuantity,
             book.available,
             book.popular,
             book.category

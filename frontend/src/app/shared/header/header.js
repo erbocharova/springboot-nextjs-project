@@ -41,7 +41,7 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
-                 
+          <h1>г. Ростов-на-Дону</h1> 
         </div>
 
 

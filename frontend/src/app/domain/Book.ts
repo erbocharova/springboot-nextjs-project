@@ -6,4 +6,6 @@ export interface Book {
   oldPrice?: number
   imageUrl: string
   stockQuantity: number
+  available: boolean
+  popular: boolean
 }

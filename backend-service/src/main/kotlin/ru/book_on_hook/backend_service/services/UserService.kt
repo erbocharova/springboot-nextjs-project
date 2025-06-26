@@ -52,7 +52,7 @@ class UserService(
             birthDate = birthDate,
             telNumber = telNumber,
             mail = mail,
-            role = User.Role.ROLE_ADMIN))
+            role = User.Role.ROLE_USER))
     }
 
      fun mapUserToDto(user: CustomUserDetails): UserDto {

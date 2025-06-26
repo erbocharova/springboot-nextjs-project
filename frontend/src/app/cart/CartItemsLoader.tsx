@@ -19,7 +19,7 @@ const CartItemsLoader: React.FC<CartItemsLoaderProps> = ({ setCartItems }) => {
       if (ids.length > 0) {
         const items = await Promise.all(
           ids.map(async (id) => {
-            const data = await getBookById(token, id)
+            const data = await getBookById(id)
             const stockQuantity = Number(data.quantity)
             const quantity = cartItemsMap[id]
             return {
@@ -32,7 +32,7 @@ const CartItemsLoader: React.FC<CartItemsLoaderProps> = ({ setCartItems }) => {
               stockQuantity,
               quantity,
               selected: true,
-            }
+            } as CartItem
           })
         )
         console.log('Loaded cart items:', items)

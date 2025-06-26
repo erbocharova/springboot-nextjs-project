@@ -27,7 +27,20 @@ const CatalogPage = () => {
   const [maxPrice, setMaxPrice] = useState(0)
   const [categories, setCategories] = useState([])
 
-  const [sortOption, setSortOption] = useState('price')
+  const [sortOption, setSortOption] = useState('')
+
+  const resetFilters = useCallback(() => {
+    setFilters({
+      name: '',
+      author: '',
+      category: '',
+      minPrice: '',
+      maxPrice: '',
+      popular: false,
+      inStock: false,
+    });
+    fetchBooks();
+  }, []);
 
   const fetchBooks = useCallback(async () => {
     setLoading(true)
@@ -41,7 +54,7 @@ const CatalogPage = () => {
       if (filters.maxPrice.trim()) searchRequest.maxPrice = Number(filters.maxPrice)
       if (filters.popular) searchRequest.popular = true
       if (filters.inStock) searchRequest.inStock = true
-      if (sortOption) searchRequest.sort = sortOption
+      if (sortOption) searchRequest.sortOrder = sortOption
 
       const noFilters =
         !searchRequest.name &&
@@ -103,8 +116,11 @@ const CatalogPage = () => {
             className={"select"}
             aria-label="Сортировка книг"
           >
-            <option value="price">Цена</option>
-            <option value="popularity">Популярность</option>
+            <option value="">Без сортировки</option>
+            <option value="price,ASC">Цена ↑</option>
+            <option value="price,DESC">Цена ↓</option>
+            <option value="name,ASC">Название А-я</option>
+            <option value="name,DESC">Название Я-а</option>
           </select>
         </div>
       </div>

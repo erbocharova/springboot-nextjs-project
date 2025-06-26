@@ -117,7 +117,7 @@ const CheckoutPage = () => {
         email: data.email,
         telNumber: data.phone,
         address: data.address,
-        paymentType: "SBP",
+        paymentType: "POSTPAY",
         deliveryDate: data.deliveryDate,
         books: products.map(product => ({
           bookId: product.id,

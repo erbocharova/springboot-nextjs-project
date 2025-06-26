@@ -36,7 +36,10 @@ const NotificationPopup = ({ visible, onClose }) => {
         ×
       </button>
       <div className="notification-popup__content">
-        <p>У вас пока нет сообщений!</p>
+        <div className="notification-popup__content__item">
+          <p>Заказ ID...495f03796ff2</p>
+          <p>Нужно вернуть 10.07.2025</p>
+        </div>
       </div>
     </div>
   );

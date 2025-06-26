@@ -35,11 +35,11 @@ class SecurityConfig (
         val corsConfig = CorsConfiguration()
         corsConfig.setAllowedOrigins(
             mutableListOf<String?>(
-                "http://localhost:3000", "http://localhost:8080"
+                "http://localhost:3000", "http://localhost:8080", "http://nextjs:3000"
             )
         )
         corsConfig.setAllowCredentials(true)
-        corsConfig.setAllowedMethods(mutableListOf<String?>("*"))
+        corsConfig.setAllowedMethods(mutableListOf<String?>("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"))
         corsConfig.setAllowedHeaders(mutableListOf<String?>("*"))
 
         val urlBasedConfig: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource()

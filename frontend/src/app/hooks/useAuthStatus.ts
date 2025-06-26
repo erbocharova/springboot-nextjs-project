@@ -7,14 +7,16 @@ import { jwtDecode } from 'jwt-decode';
 interface AuthData {
   isAuthenticated: boolean;
   isLoading: boolean;
-  role?: string;
+  isAdmin: boolean;
   username?: string;
+  token?: string;
 }
 
 export const  useAuthStatus = (): AuthData => {
   const [auth, setAuth] = useState<AuthData>({
     isAuthenticated: false,
-    isLoading: true
+    isLoading: true,
+    isAdmin: false
   });
 
   useEffect(() => {
@@ -30,7 +32,8 @@ export const  useAuthStatus = (): AuthData => {
         const decoded = jwtDecode<{ sub: string; role: string }>(token);
         setAuth({
           username: decoded.sub,
-          role: decoded.role,
+          token: token,
+          isAdmin: decoded.role === "ROLE_ADMIN" ? true : false,
           isAuthenticated: true,
           isLoading: false
         });
@@ -38,7 +41,8 @@ export const  useAuthStatus = (): AuthData => {
         console.error('Auth error:', error);
         setAuth({
           isAuthenticated: false,
-          isLoading: false
+          isLoading: false,
+          isAdmin: false
         });
       }
     };

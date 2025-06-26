@@ -269,4 +269,9 @@
   &:hover {
     background-color: $color-indigo-700;
   }
+
+  &:disabled {
+      background-color: $color-indigo-400;
+      cursor: not-allowed;
+    }
 }

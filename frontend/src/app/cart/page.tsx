@@ -43,7 +43,7 @@ export default function CartPage() {
             stockQuantity,
             quantity,
             selected: true,
-          }
+          } as CartItem
         })
       ).then((items) => {
         console.log('Loaded cart items:', items)

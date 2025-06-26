@@ -49,6 +49,16 @@
     @media screen and (max-width: $desktop) {
       margin-bottom: 0;
     }
+
+    h1 {
+      margin-left: 20px;
+      font-size: $font-size-large;
+      font-weight: $font-weight-semibold;
+
+      @media screen and (max-width: $mobile-max) {
+        display: none;
+      }
+    }
   }
 
   .header-center {

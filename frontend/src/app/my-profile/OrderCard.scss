@@ -1,0 +1,52 @@
+@import '../styles/vars.scss';
+
+.order-card {
+      margin-top: 16px;
+      background-color: $light-gray;
+      padding: 16px;
+      border-radius: 8px;
+      width: 100%;
+      box-shadow: 0 2px 8px $box-shadow-color;
+
+      p {
+        margin: 8px 0;
+        font-size: $font-size-medium;
+        color: $black-color;
+
+        strong {
+          font-weight: $font-weight-bold;
+          margin-right: 6px;
+        }
+      }
+
+      &__books {
+
+        &__button.expanding-info-button {
+            color: $black-color;
+
+            &:hover {
+                color: $color-indigo-400;
+                background-color: transparent;
+            }
+
+            &:active {
+                color: $color-indigo-600;
+                background-color: transparent;
+            }
+        }
+      }
+
+      &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        &__button {
+            background-color: $color-indigo-400;
+
+            &:hover {
+                background-color: $color-indigo-600;
+            }
+        }
+      }
+    }
