@@ -39,7 +39,7 @@ class SecurityConfig (
             )
         )
         corsConfig.setAllowCredentials(true)
-        corsConfig.setAllowedMethods(mutableListOf<String?>("*"))
+        corsConfig.setAllowedMethods(mutableListOf<String?>("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"))
         corsConfig.setAllowedHeaders(mutableListOf<String?>("*"))
 
         val urlBasedConfig: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource()
