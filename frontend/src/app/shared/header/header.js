@@ -48,7 +48,6 @@ const Header = () => {
 
         <div className="header-right">
           <div className="notification-wrapper" style={{ position: "relative" }}>
-            <span className="notification-wrapper__red-dot"></span>
             <Button
               className="icon-button"
               icon="/icons/notification.svg"

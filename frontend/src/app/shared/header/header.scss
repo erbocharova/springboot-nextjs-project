@@ -131,21 +131,6 @@
       gap: 10px;
     }
 
-    .notification-wrapper {
-
-      &__red-dot {
-        display: inline-block; 
-        z-index: 10000;
-      position: relative;
-      right: -40px;
-      top: -12px;
-      width: 12px;
-      height: 12px;
-      background-color: $light-green-color;
-      border-radius: 100%;
-      }
-    }
-
   .icon-button {
     background: none;
     border: none;

@@ -35,7 +35,7 @@ class SecurityConfig (
         val corsConfig = CorsConfiguration()
         corsConfig.setAllowedOrigins(
             mutableListOf<String?>(
-                "http://localhost:3000", "http://localhost:8080"
+                "http://localhost:3000", "http://localhost:8080", "http://nextjs:3000"
             )
         )
         corsConfig.setAllowCredentials(true)
