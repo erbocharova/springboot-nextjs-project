@@ -45,6 +45,7 @@
 /frontend/.next
 
 #backend-service
+application.properties
 /backend-service/HELP.md
 /backend-service/target/
 /backend-service/.mvn/wrapper/maven-wrapper.jar
