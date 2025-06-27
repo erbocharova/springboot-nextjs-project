@@ -46,8 +46,19 @@
   font-size: $font-size-medium;
   text-align: center;
   user-select: none;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  &__item {
+    margin-top: 4px;
+      background-color: $light-gray;
+      box-shadow: 0 2px 8px $box-shadow-color;
+
+      p {
+        padding: 4px;
+        text-align: start;
+      }
+  }
 }
 
 .notification-popup__close {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.book_on_hook.backend_service.dao.User
 import ru.book_on_hook.backend_service.dto.UserDto
 import ru.book_on_hook.backend_service.repository.UserRepository
+import ru.book_on_hook.backend_service.security.CustomUserDetails
 
 //Сервис пользователей, реализующий методы взаимводействия с базой
 @Service
@@ -28,7 +29,7 @@ class UserService(
         return result
     }
 
-    fun createUser(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String): User {
+    fun createAdmin(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String, telNumber: String, mail: String): User {
         val encodedPassword = encoder.encode(rawPassword)
         return userRepository.save(User(
             username = username,
@@ -36,15 +37,37 @@ class UserService(
             firstName = firstName,
             lastName = lastName,
             birthDate = birthDate,
-            role = User.Role.ADMIN))
+            telNumber = telNumber,
+            mail = mail,
+            role = User.Role.ROLE_ADMIN))
     }
 
-     fun mapUserToDto(user: User): UserDto {
+    fun createUser(username: String, rawPassword: String, firstName: String, lastName: String, birthDate: String, telNumber: String, mail: String): User {
+        val encodedPassword = encoder.encode(rawPassword)
+        return userRepository.save(User(
+            username = username,
+            passwordHash = encodedPassword,
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate,
+            telNumber = telNumber,
+            mail = mail,
+            role = User.Role.ROLE_USER))
+    }
+
+     fun mapUserToDto(user: CustomUserDetails): UserDto {
         return UserDto(
             username = user.username,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            birthDate = user.birthDate
+            firstName = user.getFirstName(),
+            lastName = user.getLastName(),
+            birthDate = user.getBirthDate(),
+            telNumber = user.getTelNumber(),
+            mail = user.getMail(),
+            role = user.getRole()
         )
+    }
+
+    fun validatePassword(password: String, hashedPassword: String): Boolean {
+        return encoder.matches(password, hashedPassword)
     }
 }

@@ -8,24 +8,23 @@ import NotificationPopup from "@/app/shared/notification-popup/NotificationPopup
 import { useAuthStatus } from "@/app/hooks/useAuthStatus";
 
 import "./header.scss";
+import { title } from "process";
+
+const helpList = [
+  ];
 
 const navCategories = [
-  "Книги",
-  "Иностранные",
-  "Главное",
-  "Школа",
-  "Канцтовары",
-  "Игрушки",
-  "Еще",
-  "Клуб",
-  "Ростов-на-Дону — доставка",
+  { ref: 'catalog', title: 'Каталог'},
+  { ref: 'help#payment', title: 'Оплата' },
+  { ref: 'help#delivery', title: 'Доставка' },
+  { ref: 'help#support', title: 'Поддержка' }
 ];
 
 const Header = () => {
   const [isNotificationOpen, setNotificationOpen] = useState(false);
-  const { isLoggedIn } = useAuthStatus();
+  const { isAuthenticated } = useAuthStatus();
 
-  const catalogButtonClick = () => {
+  const findButtonClick = () => {
     window.location.href = window.location.href;
   };
 
@@ -42,18 +41,10 @@ const Header = () => {
       <div className="header-main">
         <div className="header-left">
           <Logo />
+          <h1>г. Ростов-на-Дону</h1> 
         </div>
 
-        <div className="header-center">
-          <Search
-            className="header-search-form"
-            inputType="text"
-            id="searchInput"
-            placeholder="Поиск по Лабиринту"
-            onClick={catalogButtonClick}
-            icon="/icons/find.svg"
-          />
-        </div>
+
 
         <div className="header-right">
           <div className="notification-wrapper" style={{ position: "relative" }}>
@@ -65,29 +56,31 @@ const Header = () => {
             />
             <NotificationPopup visible={isNotificationOpen} onClose={closeNotification} />
           </div>
-          { isLoggedIn ?
-            <Link href="/my-profile" passHref>
-              <Button
-                className="icon-button"
-                icon="/icons/profile.svg"
-                title="Мой Лабиринт"
-              />
+          {isAuthenticated ?
+          <Link href="/my-profile" passHref>
+            <Button
+              className="icon-button"
+              icon="/icons/profile.svg"
+              title="Мой кабинет"
+            />
           </Link>
-          : <Link href="/auth/signup" passHref>
-              <Button
-                className="icon-button"
-                icon="/icons/profile.svg"
-                title="Мой Лабиринт"
-              />
-          </Link>}
+          :
+          <Link href="/auth/sign-in" passHref>
+            <Button
+              className="icon-button"
+              icon="/icons/profile.svg"
+              title="Вход"
+            />
+          </Link>
+          }
           <Link href="/cart" passHref>
-              <Button
-                className="icon-button cart-button"
-                icon="/icons/cart-icon.svg"
-                title="Корзина"
-              >
-                <span className="cart-badge">0</span>
-              </Button>
+            <Button
+              className="icon-button cart-button"
+              icon="/icons/cart-icon.svg"
+              title="Корзина"
+            >
+              <span className="cart-badge">0</span>
+            </Button>
           </Link>
         </div>
       </div>
@@ -95,8 +88,8 @@ const Header = () => {
       <nav className="header-nav-categories">
         <ul>
           {navCategories.map((category) => (
-            <li key={category}>
-              <Link href="#">{category}</Link>
+            <li key={category.ref}>
+              <Link href={`/${category.ref}`}>{category.title}</Link>
             </li>
           ))}
         </ul>

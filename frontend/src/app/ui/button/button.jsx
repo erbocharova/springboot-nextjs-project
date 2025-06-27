@@ -1,7 +1,7 @@
 import React from "react";
 import "./button.scss";
 
-const Button = ({ onClick, text, icon, className = "", style }) => {
+const Button = ({ onClick, text, icon, className, style }) => {
   return (
     <button
       className={`custom-button ${className}`}

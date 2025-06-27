@@ -79,3 +79,5 @@ application.properties
 
 ### VS Code ###
 /backend-service/.vscode/
+frontend/src/app/README_DYNAMIC_FORM.md
+.blackboxrules

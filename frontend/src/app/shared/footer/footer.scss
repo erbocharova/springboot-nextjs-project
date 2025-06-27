@@ -28,7 +28,7 @@
             gap: 8px;
         }
 
-        &__categories {
+        &__feedback {
 
             @media screen and (max-device-width: $mobile-max) {
                 width: 100%;
@@ -43,6 +43,11 @@
 
                 li {
 
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    gap: 8px;
+
                     a {
                         font-size: $font-size-large;
                         color: $gray-color;
@@ -54,6 +59,11 @@
 
                     a:active {
                         color: $color-indigo-600;
+                    }
+
+                    img {
+                        width: 20px;
+                        height: 20px;
                     }
                 }
             }

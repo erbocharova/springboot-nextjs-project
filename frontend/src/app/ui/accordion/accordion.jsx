@@ -3,7 +3,7 @@ import Button from "../button/button";
 import "./accordion.scss";
 
 
-const Accordion = ({ className, text, isAlwaysExpanded, accordionBody, icon }) => {
+const Accordion = ({ className, buttonClassName, text, isAlwaysExpanded, accordionBody, icon }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -17,7 +17,7 @@ const Accordion = ({ className, text, isAlwaysExpanded, accordionBody, icon }) =
       ) : (
         <Button
           onClick={toggleAccordion}
-          className={`expanding-info-button ${isOpen ? "active" : ""}`}
+          className={`expanding-info-button ${isOpen ? "active" : ""} ${buttonClassName || ""}`}
           text={text}
           icon={icon}
         />

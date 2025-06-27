@@ -1,0 +1,127 @@
+@import "../../styles/vars";
+
+.registration {
+    width: 40%;
+
+    @media screen and (max-width: $mobile-max) {
+      width: 100%;
+    }
+
+  &__container {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 2rem;
+
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: $font-size-xlarge;
+    font-weight: $font-weight-semibold;
+  }
+
+  &__form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  &__input-container {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 1rem 1rem 0.5rem;
+    font-size: 1rem;
+    border: 1px solid $input-placeholder-border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $color-indigo-600;
+    }
+
+    &:focus + .registration__label,
+    &:not(:placeholder-shown) + .registration__label {
+      transform: translateY(-1rem) scale(0.8);
+    }
+
+    &--error {
+      border-color: $error-color;
+    }
+  }
+
+  &__label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: $gray-color;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    transform-origin: left top;
+  }
+
+  &__error-message {
+    color: $error-color;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+
+  &__submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: $color-indigo-600;
+    color: $white-color;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $color-indigo-700;
+    }
+
+    &:disabled {
+      background-color: $color-indigo-400;
+      cursor: not-allowed;
+    }
+  }
+
+  &__signin-button {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0.75rem;
+    background-color: $color-indigo-600;
+    color: $white-color;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $color-indigo-700;
+    }
+   }
+
+  @media (max-width: 768px) {
+    &__container {
+      padding: 1rem;
+    }
+
+    &__input {
+      padding: 0.8rem 0.8rem 0.4rem;
+    }
+
+    &__label {
+      top: 0.8rem;
+      left: 0.8rem;
+    }
+  }
+}
+
